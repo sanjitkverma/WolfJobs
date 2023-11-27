@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUserStore } from "../../store/UserStore";
 import { toast } from "react-toastify";
@@ -39,6 +39,11 @@ const Explore = () => {
   const jobList: Job[] = useJobStore((state) => state.jobList);
   // const applicationList = useApplicationStore((state) => state.applicationList);
 
+  // New state for search and sort
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortCriteria, setSortCriteria] = useState('pay_asc');
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     const token: string = localStorage.getItem("token")!;
     if (!!!token) {
@@ -63,35 +68,60 @@ const Explore = () => {
     }
   }, []);
 
+  // Updated useEffect for fetching jobs with search and sort
   useEffect(() => {
-    axios
-      .get("http://localhost:8000/api/v1/users/fetchapplications")
-      .then((res) => {
-        if (res.status !== 200) {
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        const applicationsResponse = await axios.get("http://localhost:8000/api/v1/users/fetchapplications");
+        if (applicationsResponse.status === 200) {
+          updateApplicationList(applicationsResponse.data.application);
+        } else {
           toast.error("Error fetching applications");
-          return;
         }
-        updateApplicationList(res.data.application as Application[]);
-      });
 
-    axios
-      .get("http://localhost:8000/api/v1/users", {
-        params: { page: 1, limit: 25 },
-      })
-      .then((res) => {
-        if (res.status !== 200) {
+        const jobsResponse = await axios.get("http://localhost:8000/api/v1/users", {
+          params: { search: searchTerm, sort: sortCriteria, page: 1, limit: 25 }
+        });
+        if (jobsResponse.status === 200) {
+          updateJobList(jobsResponse.data.jobs);
+        } else {
           toast.error("Error fetching jobs");
-          return;
         }
-        updateJobList(res.data.jobs as Job[]);
-      });
-  }, []);
+      } catch (error) {
+        toast.error("Error fetching data");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    const debounceTimer = setTimeout(() => {
+      fetchData();
+    }, 500);
+
+    return () => clearTimeout(debounceTimer);
+  }, [searchTerm, sortCriteria]);
 
   return (
     <>
       <div className="content bg-slate-50">
         <div className="flex flex-row" style={{ height: "calc(100vh - 72px)" }}>
-          <JobsListView jobsList={jobList} />
+          <div>
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Search jobs..."
+            />
+            <select
+              value={sortCriteria}
+              onChange={(e) => setSortCriteria(e.target.value)}
+            >
+              <option value="pay_asc">Pay: Low to High</option>
+              <option value="pay_desc">Pay: High to Low</option>
+            </select>
+          </div>
+          <JobsListView jobsList={useJobStore((state) => state.jobList)} />
           <JobDetailView />
         </div>
       </div>

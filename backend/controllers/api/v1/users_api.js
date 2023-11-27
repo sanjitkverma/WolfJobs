@@ -20,7 +20,7 @@ module.exports.createSession = async function (req, res) {
       });
     }
     res.set("Access-Control-Allow-Origin", "*");
-    return res.json(200, {
+    return res.status(200).json( {
       message: "Sign In Successful, here is your token, please keep it safe",
       data: {
         token: jwt.sign(user.toJSON(), "caloriesapp", { expiresIn: "100000" }),
@@ -284,24 +284,68 @@ module.exports.createJob = async function (req, res) {
   }
 };
 
+// new api endpoint for getting all job listings with sort and search implemented
 module.exports.index = async function (req, res) {
-  let jobs = await Job.find({}).sort("-createdAt");
+  // search query options
+  let matchQuery = {};
+  if (req.query.search) {
+    matchQuery.name = { $regex: req.query.search, $options: "i" };
+  }
 
-  //Whenever we want to send back JSON data
-  res.set("Access-Control-Allow-Origin", "*");
-  return res.json(200, {
-    message: "List of jobs",
+  let sortField = "_id"; // Default sort field
+  let sortOrder = 1; // Default sort order (1 for ascending, -1 for descending)
+  if (req.query.sort) {
+    const sortParts = req.query.sort.split('_');
+    sortField = sortParts[0]; // e.g., "pay"
+    sortOrder = sortParts[1] === 'desc' ? -1 : 1;
+  }
 
-    jobs: jobs,
-  });
+  /**
+   * The $addFields stage uses the $cond operator to check if pay is already a number ($isNumber). If it is, it uses the value as-is. If not, it attempts to convert it to a double.
+    The $convert operator includes an onError clause, which defaults to 0 if the conversion fails. This prevents the query from failing due to conversion errors.
+    This approach should handle various data scenarios more gracefully. If pay is already a number, it sorts correctly. If pay is a string, it tries to convert it to a number, defaulting to 0 on failure.
+
+    Make sure to test this thoroughly with your dataset. If there are still issues, it would be helpful to know more about how your data is structured, especially the pay field, to provide a more tailored solution.
+   */
+  try {
+    let pipeline = [
+      { $match: matchQuery },
+      { 
+        $addFields: { 
+          numericPay: { 
+            $cond: {
+              if: { $isNumber: "$pay" },
+              then: "$pay",
+              else: { $convert: { input: "$pay", to: "double", onError: 0 } }
+            }
+          } 
+        } 
+      },
+      { $sort: { [sortField === 'pay' ? 'numericPay' : sortField]: sortOrder } }
+    ];
+
+
+    let jobs = await Job.aggregate(pipeline);
+    res.set("Access-Control-Allow-Origin", "*");
+    return res.status(200).json({
+      message: "List of jobs",
+      jobs: jobs,
+    });
+  } catch (err) {
+    console.log(err);
+    return res.json(500, {
+      message: "Internal Server Error",
+    });
+  }
 };
+
 
 module.exports.fetchApplication = async function (req, res) {
   let application = await Application.find({}).sort("-createdAt");
 
   //Whenever we want to send back JSON data
   res.set("Access-Control-Allow-Origin", "*");
-  return res.json(200, {
+  return res.status(200).json( {
     message: "List of Applications",
 
     application: application,
