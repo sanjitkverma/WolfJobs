@@ -1,4 +1,5 @@
 const emailService = require('../models/email');
+
 const updateApplicationStatus = async (req, res) => {
     const { applicationId, status } = req.body;
   
@@ -16,7 +17,7 @@ const updateApplicationStatus = async (req, res) => {
       const subject = `Your application has been reviewed`;
       const text = `Dear ${applicant.name},\n\nYour application for the position has been ${status}.\n\nBest regards,\nYour Company`;
   
-      await emailService.sendEmailNotification(applicant.email, subject, text);
+      await emailService.sendApplicationResultEmail(application.applicantId, subject, text);
   
       res.status(200).send({ message: 'Application status updated and notification sent' });
     } catch (error) {
