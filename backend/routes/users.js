@@ -9,8 +9,6 @@ const usersController = require('../controllers/users_controller');
 // import the resume controller
 const resumeController = require('../controllers/resume_controller'); 
 
-const emailController = require('../controllers/email_controller'); 
-
 const emailController = require('../controllers/email_controller');
 
 router.get('/profile',passport.checkAuthentication, usersController.profile);
