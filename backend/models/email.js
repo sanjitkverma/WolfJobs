@@ -2,7 +2,6 @@ const nodemailer = require('nodemailer');
 const Application = require('../models/application');
 require('dotenv').config();
 
-
 // Create a transporter for sending emails
 const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -12,7 +11,7 @@ const transporter = nodemailer.createTransport({
     },
 });
 // Function to send email notifications
-const sendApplicationResultEmail = async (applicantId, subject, text) => {
+const sendEmail = async (applicantId, subject, text) => {
     const application = await Application.findById(applicantId);
     if (!application) {
         console.error('Applicantion not found');
@@ -33,6 +32,4 @@ const sendApplicationResultEmail = async (applicantId, subject, text) => {
     }
 };
 
-module.exports = {
-    sendApplicationResultEmail,
-};
+module.exports = sendEmail;
