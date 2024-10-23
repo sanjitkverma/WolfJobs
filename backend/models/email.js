@@ -1,5 +1,4 @@
 const nodemailer = require('nodemailer');
-const Application = require('../models/application');
 require('dotenv').config();
 
 // Create a transporter for sending emails
@@ -11,16 +10,10 @@ const transporter = nodemailer.createTransport({
     },
 });
 // Function to send email notifications
-const sendEmail = async (applicantId, subject, text) => {
-    const application = await Application.findById(applicantId);
-    if (!application) {
-        console.error('Applicantion not found');
-        return;
-    }
-
+const sendEmail = async (applicantemail, subject, text) => {
     const mailOptions = {
         from: process.env.EMAIL_USER,
-        to: application.applicantemail,
+        to: applicantemail,
         subject,
         text,
     };

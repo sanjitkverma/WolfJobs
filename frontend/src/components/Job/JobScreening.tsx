@@ -45,7 +45,7 @@ const JobScreening = (props: any) => {
         .catch(() => {
             toast.error("Failed to notify candidate");
         });
-        
+
         location.reload();
 
       } else {
@@ -96,7 +96,7 @@ const handleReject = (applicationId: string) => {
         <div className="text-base text-gray-500">List empty</div>
       )}
       {displayList?.map((item: Application) => (
-        <div className="p-1 ">
+        <div className="p-1 " key={item._id}>
           <div className="p-2 mx-1 my-2 bg-white rounded-lg">
             <div className="flex flex-row justify-between ">
               <div className="flex flex-col">
