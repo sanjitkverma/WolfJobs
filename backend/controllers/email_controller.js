@@ -17,11 +17,14 @@ const updateApplicationStatus = async (req, res) => {
   
       // Notify the applicant
       const applicant = await User.findById(application.applicantid);
+      if (!applicant) {
+        return res.status(404).json({ message: 'Applicant not found' });
+      }
       const subject = `Your application has been reviewed`;
       const text = `Dear ${applicant.name},\n\nYour application for the position has been ${status}.\n\nBest regards,\nHiring Team`;
   
       try {
-        await email.sendEmail(applicant._id, subject, text);
+        await email.sendEmail(applicant.email, subject, text);
       } catch (emailError) {
         console.error('Error sending email:', emailError);
         return res.status(500).json({ message: 'Application status updated, but failed to send email notification' });
