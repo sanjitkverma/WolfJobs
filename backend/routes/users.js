@@ -9,6 +9,10 @@ const usersController = require('../controllers/users_controller');
 // import the resume controller
 const resumeController = require('../controllers/resume_controller'); 
 
+const emailController = require('../controllers/email_controller'); 
+
+const emailController = require('../controllers/email_controller');
+
 router.get('/profile',passport.checkAuthentication, usersController.profile);
 
 router.get('/sign-up', usersController.signUp);
@@ -38,6 +42,7 @@ router.get('/sign-out', usersController.destroySession);
 
 router.get('/ping', resumeController.ping);
 
-
+// Route to update application status
+router.post('/update-application-status', emailController.updateApplicationStatus);
 
 module.exports = router;
