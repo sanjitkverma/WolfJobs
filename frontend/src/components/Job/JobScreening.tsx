@@ -22,72 +22,42 @@ const JobScreening = (props: any) => {
     );
   }, [searchParams]);
 
-  const handleAccept = (applicationId: string) => { 
+  const handleAccept = (applicationId: string) => {
     const url = "http://localhost:8000/api/v1/users/modifyApplication";
-    const emailUrl = "http://localhost:8000/users/update-application-status";
 
     const body = {
       applicationId: applicationId,
       status: "screening",
     };
 
-    // First, modify the application status
     axios.post(url, body).then((res) => {
-      if (res.status === 200) {
-        // Send the email notification
-        axios.post(emailUrl, {applicationId, status: "screening"}).then((notifyRes) => {
-            if (notifyRes.status === 200) {
-                toast.success("Accepted candidate and notified them");
-            } else {
-                toast.error("Failed to notify candidate");
-            }
-        })
-        .catch(() => {
-            toast.error("Failed to notify candidate");
-        });
-
+      if (res.status == 200) {
+        toast.success("Accepted candidate");
         location.reload();
 
-      } else {
-        toast.error("Failed to accept candidate");
+        return;
       }
-    }).catch(() => {
       toast.error("Failed to accept candidate");
     });
-};
+  };
+  const handleReject = (applicationId: string) => {
+    const url = "http://localhost:8000/api/v1/users/modifyApplication";
 
-const handleReject = (applicationId: string) => {
-  const url = "http://localhost:8000/api/v1/users/modifyApplication";
-  const emailUrl = "http://localhost:8000/users/update-application-status";
-
-  const body = {
+    const body = {
       applicationId: applicationId,
       status: "rejected",
-  };
+    };
 
-  // First, modify the application status
-  axios.post(url, body).then((res) => {
-      if (res.status === 200) {
-          // Send the email notification
-          axios.post(emailUrl, {applicationId, status: "rejected"}).then((notifyRes) => {
-              if (notifyRes.status === 200) {
-                  toast.success("Rejected candidate and notified them");
-              } else {
-                  toast.error("Failed to notify candidate");
-              }
-          })
-          .catch(() => {
-              // Handle the error without declaring notifyError
-              toast.error("Failed to notify candidate");
-          });
-          location.reload();
-      } else {
-          toast.error("Failed to reject candidate");
+    axios.post(url, body).then((res) => {
+      if (res.status == 200) {
+        toast.success("Rejected candidate");
+        location.reload();
+
+        return;
       }
-  }).catch(() => {
       toast.error("Failed to reject candidate");
-  });
-};
+    });
+  };
 
   return (
     <>
@@ -96,7 +66,7 @@ const handleReject = (applicationId: string) => {
         <div className="text-base text-gray-500">List empty</div>
       )}
       {displayList?.map((item: Application) => (
-        <div className="p-1 " key={item._id}>
+        <div className="p-1 ">
           <div className="p-2 mx-1 my-2 bg-white rounded-lg">
             <div className="flex flex-row justify-between ">
               <div className="flex flex-col">
