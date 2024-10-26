@@ -51,7 +51,7 @@ const LoginPage = () => {
                 {...register("email", {
                   required: "Email is required",
                   pattern: {
-                    value: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
+                    value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/,
                     message: "Enter a valid email",
                   },
                 })}
