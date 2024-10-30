@@ -23,7 +23,7 @@ const LogoutPage = () => {
     updateAddress("");
     updateRole("");
     updateDob("");
-    updateSkills("");
+    updateSkills([]);
     updatePhonenumber("");
     updateId("");
     updateAvailability("");

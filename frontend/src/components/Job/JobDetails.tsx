@@ -165,7 +165,7 @@ const JobDetail = (props: any) => {
               </div>
               <div>
                 <span className="font-semibold text-lg">Required Skills:</span>&nbsp;
-                {jobData.requiredSkills}
+                <span className="text-black">{jobData.requiredSkills.join(", ")}</span>
               </div>
               <div>
                 {userRole === "Applicant" &&
