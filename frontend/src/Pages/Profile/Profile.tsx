@@ -73,7 +73,7 @@ const Profile = () => {
               </div>
               <div>
                 <span className="text-lg">Skills: </span>
-                <span className="text-gray-500">{skills || " -- "}</span>
+                <span className="text-gray-500">{skills.length > 0 ? skills.join(", ") : " -- "}</span>
               </div>
               <div>
                 <span className="text-lg">Phone Number: </span>
