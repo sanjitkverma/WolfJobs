@@ -6,7 +6,7 @@ import { useUserStore } from "../../store/UserStore";
 
 const JobListTile = (props: any) => {
   // const { data, action }: { data: Job; action: string | undefined } = props;
-  const { data }: { data: Job } = props;
+  const { data, onJobClicked }: { data: Job, onJobClicked: Function } = props;
   let action = "view-more";
 
   const getMatchStatus = (job: Job) => {
@@ -71,6 +71,7 @@ const JobListTile = (props: any) => {
 
   const handleClick = (e: any) => {
     e.preventDefault();
+    onJobClicked(data._id);
     setSearchParams({ jobId: data._id });
   };
 

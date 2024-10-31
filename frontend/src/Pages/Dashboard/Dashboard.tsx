@@ -7,7 +7,10 @@ import { useUserStore } from "../../store/UserStore";
 import { useJobStore } from "../../store/JobStore";
 import { useApplicationStore } from "../../store/ApplicationStore";
 import JobListTile from "../../components/Job/JobListTile";
-import { Button } from "@mui/material";
+import { Button, Fab } from "@mui/material";
+import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
+import ChatWindow from "../../components/ChatWindow";
+import { fetchMessages } from "../../api/message";
 
 const Dashboard = () => {
   const naviagte = useNavigate();
@@ -115,6 +118,29 @@ const Dashboard = () => {
     }
   }, [role, jobList, applicationList]);
 
+  const [chats, setChats] = useState<any[]>([]);
+  const [applicationId, setApplicationId] = useState<string>("");
+  const [isChatOpen, setIsChatOpen] = useState(false);
+
+  const handleFabClick = async () => {
+    setIsChatOpen(true);
+    try {
+      const data = await fetchMessages(applicationId); // Trigger the API call here
+      setChats(data);
+    } catch (error) {
+      console.error('Error fetching chats:', error);
+    }
+  };
+
+  const findAndSetApplicationId = (jobId: string) => {
+    console.log(jobId)
+    const application = applicationList?.find(
+      (item) => item.jobid === jobId
+    )
+
+    setApplicationId(application!!._id)
+  }
+
   return (
     <>
       <div className="content bg-slate-50">
@@ -139,13 +165,30 @@ const Dashboard = () => {
                     : "view-application";
                 }
 
-                return <JobListTile data={job} key={job._id} action={action} />;
+                return <JobListTile data={job} key={job._id} action={action} onJobClicked={(jobId: string) => findAndSetApplicationId(jobId)} />;
               })}
             </div>
           </>
           <JobDetailView />
         </div>
       </div>
+      <ChatWindow 
+        isOpen={isChatOpen} 
+        chats={chats} 
+        onClose={() => setIsChatOpen(false)} 
+      />
+      <Fab
+        color="primary"
+        aria-label="open chat"
+        sx={{
+          position: 'fixed',
+          bottom: (theme) => theme.spacing(2),
+          right: (theme) => theme.spacing(2),
+        }}
+        onClick={handleFabClick}
+      >
+        <ChatBubbleIcon />
+      </Fab>
       {role === "Manager" && (
         <div className="fixed p-4 bottom-3 right-3">
           <Button

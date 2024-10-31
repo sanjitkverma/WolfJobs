@@ -15,6 +15,7 @@ export async function login(email: string, password: string, navigate: any) {
     .then((data) => {
       if (data.success) {
         localStorage.setItem("token", data.data.token);
+        localStorage.setItem("userId", data.data.user._id)
         navigate("/dashboard");
         return;
       }
