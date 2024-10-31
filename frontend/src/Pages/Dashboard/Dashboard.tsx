@@ -141,11 +141,8 @@ const Dashboard = () => {
                     : "view-application";
                 }
 
-                const currentUserApplication =
-                  applicationList?.find((item) => item.jobid === job._id && item.applicantid === userId);
-
                 // check if the current signed in user has applied for the job
-                return currentUserApplication ? <JobListTile data={job} key={job._id} action={action} /> : <></>;
+                return applicationList?.find((item) => item.jobid === job._id && item.applicantid === userId) ? <JobListTile data={job} key={job._id} action={action} /> : <></>;
               })}
             </div>
           </>
