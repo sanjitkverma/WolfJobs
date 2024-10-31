@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { AiFillCheckCircle } from "react-icons/ai";
+import { Autocomplete } from "@mui/material";
+
 import {
   Button,
   FormControl,
@@ -18,13 +20,14 @@ type FormValues = {
   jobtype: string;
   location: string;
   pay: string;
-  requiredSkills: string;
+  requiredSkills: string[];
   description: string;
 };
 
 const CreateJob = () => {
   const navigate = useNavigate();
-  const [requiredSkills, setRequiredSkills] = useState("");
+  const [requiredSkills, setRequiredSkills] = useState<string[]>([]); // Changed to an array
+  const [skills, setSkills] = useState<string[]>([]); // For fetched skills
 
   const form = useForm<FormValues>({
     defaultValues: {
@@ -40,6 +43,25 @@ const CreateJob = () => {
   const { errors } = formState;
 
   const [jobType, setJobType] = useState("full-time");
+
+  // Fetch skills from backend
+  useEffect(() => {
+    const fetchSkills = async () => {
+      try {
+        const response = await fetch("http://localhost:8000/api/v1/users/skills");
+        if (!response.ok) {
+          throw new Error(`Error ${response.status}: ${response.statusText}`);
+        }
+        const data = await response.json();
+        console.log("Fetched skills:", data);
+        setSkills(data);
+      } catch (error) {
+        console.error("Error fetching skills:", error);
+        setSkills([]);
+      }
+    };
+    fetchSkills();
+  }, []);
 
   const onSubmit = (data: FormValues) => {
     const body = {
@@ -154,6 +176,11 @@ const CreateJob = () => {
                   type="number"
                   {...register("pay", {
                     required: "Job pay is required",
+                    validate: {
+                      positive: (value) => {
+                        return Number(value) > 0 || "Pay must be a positive value";
+                      },
+                    },
                   })}
                   error={!!errors.pay}
                   helperText={errors.pay?.message}
@@ -169,7 +196,9 @@ const CreateJob = () => {
                 <TextField
                   label="Job Description"
                   type="text"
-                  {...register("description")}
+                  {...register("description", {
+                      required: "Job description is required",
+                  })}
                   error={!!errors.description}
                   helperText={errors.description?.message}
                   sx={{
@@ -183,25 +212,18 @@ const CreateJob = () => {
                   minRows={4}
                   multiline
                 />
-                <TextField
+                <Autocomplete
+                  multiple
+                  options={skills} // List of skills from backend
+                   onChange={(_, newValue) => setRequiredSkills(newValue)}
+                   renderInput={(params) => (
+                  <TextField
+                    {...params}
                   label="Required Skills"
-                  type="text"
-                  {...register("requiredSkills", {
-                    required: "Skills are required",
-                  })}
-                  value={requiredSkills}
-                  onChange={(e) => setRequiredSkills(e.target.value)}
-                  error={!!errors.requiredSkills}
-                  helperText={errors.requiredSkills?.message}
-                  sx={{
-                    "& label": { paddingLeft: (theme) => theme.spacing(1) },
-                    "& input": { paddingLeft: (theme) => theme.spacing(2.5) },
-                    "& fieldset": {
-                      paddingLeft: (theme) => theme.spacing(1.5),
-                      borderRadius: "10px",
-                    },
-                  }}
+                  placeholder="Type to search skills"
                 />
+            )}
+          />
                 <Button
                   type="submit"
                   variant="outlined"

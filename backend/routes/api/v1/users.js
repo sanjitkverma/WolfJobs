@@ -4,6 +4,8 @@ const router = express.Router();
 
 const usersApi = require("../../../controllers/api/v1/users_api");
 
+const required_skills = require("../../../skills/required_skills");
+
 const bodyParser = require("body-parser");
 
 const jsonParser = bodyParser.json();
@@ -26,6 +28,14 @@ router.post("/verifyOTP", usersApi.verifyOtp);
 router.post("/rejectapplication", usersApi.rejectApplication);
 router.post("/closejob", jsonParser, usersApi.closeJob);
 router.post("/createapplication", jsonParser, usersApi.createApplication);
+router.get("/skills", (req, res) => {
+    try {
+        res.json(required_skills.skills);
+    } catch (error) {
+        console.error('Error fetching skills:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+});
 
 
 module.exports = router;
