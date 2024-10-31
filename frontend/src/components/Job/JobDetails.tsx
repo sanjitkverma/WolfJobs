@@ -65,7 +65,8 @@ const JobDetail = (props: any) => {
       setShowApply(false);
     } else {
       const temp: Application | undefined = applicationList.find(
-        (item) => jobData._id === item.jobid
+        // check if the current signed in applicant has applied for the job
+        (item) => jobData._id === item.jobid && item.applicantid === userId
       );
       setShowApply(!temp || false);
     }
@@ -145,11 +146,10 @@ const JobDetail = (props: any) => {
                 <span className="font-semibold text-lg">Job Status:</span>
                 &nbsp;
                 <span
-                  className={`capitalize ${
-                    jobData.status === "open"
-                      ? "text-green-500"
-                      : "text-red-500"
-                  }`}
+                  className={`capitalize ${jobData.status === "open"
+                    ? "text-green-500"
+                    : "text-red-500"
+                    }`}
                 >
                   {jobData.status}
                 </span>
@@ -169,8 +169,7 @@ const JobDetail = (props: any) => {
               </div>
               <div>
                 {userRole === "Applicant" &&
-                  (application?.status === "accepted" ||
-                  application?.status === "rejected" ? (
+                  (application?.status ? (
                     <>
                       <b>Application Status:</b>
                       <span className="capitalize">
