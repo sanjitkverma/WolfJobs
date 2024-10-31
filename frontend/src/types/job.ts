@@ -8,7 +8,7 @@ type Job = {
   description: string;
   pay: string;
   type: string;
-  requiredSkills: string;
+  requiredSkills: string[];
   question1: string;
   question2: string;
   question3: string;
