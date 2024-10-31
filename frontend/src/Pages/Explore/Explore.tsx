@@ -9,7 +9,8 @@ import JobsListView from "../../components/Job/JobListView";
 import JobDetailView from "../../components/Job/JobDetailView";
 import { useJobStore } from "../../store/JobStore";
 import { useApplicationStore } from "../../store/ApplicationStore";
-// const userId = useUserStore((state) => state.id);
+
+import { Select, MenuItem, SelectChangeEvent, InputLabel, FormControl } from "@mui/material"
 
 const Explore = () => {
   const naviagte = useNavigate();
@@ -28,13 +29,11 @@ const Explore = () => {
   const updateResume = useUserStore((state) => state.updateResume)
   const updateResumeId = useUserStore((state) => state.updateResumeId);
 
+  const [affiliation, setAffiliation] = useState("");
 
   const updateApplicationList = useApplicationStore(
     (state) => state.updateApplicationList
   );
-  // const userId = useUserStore((state) => state.id);
-
-  // const [displayList, setDisplayList] = useState<Job[]>([]);
 
   const updateEmail = useUserStore((state) => state.updateEmail);
 
@@ -146,10 +145,24 @@ const Explore = () => {
       });
     }
 
+    if (affiliation !== "") {
+      updatedList = [...updatedList].filter((job) => job.managerAffilication === affiliation)
+    }
+
     updatedList = updatedList.filter(job => showOpenJobs ? job.status === "open" : job.status === "closed");
 
     setFilteredJobList(updatedList);
-  }, [searchTerm, jobList, sortHighestPay, sortAlphabeticallyByCity, sortByEmploymentType, showOpenJobs]);
+  }, [searchTerm, jobList, sortHighestPay, sortAlphabeticallyByCity, sortByEmploymentType, showOpenJobs, affiliation]);
+
+
+  const handleClearFilter = () => {
+    setSearchTerm("");
+    setAffiliation("");
+    setShowOpenJobs(true);
+    setSortAlphabeticallyByCity(false);
+    setSortHighestPay(false);
+    setSortAlphabeticallyByCity(false);
+  };
 
   return (
     <>
@@ -174,16 +187,43 @@ const Explore = () => {
             <button onClick={handleSortEmploymenyTypeChange} className="p-2 ml-2 border">
               {sortByEmploymentType ? "Sort by Employment Type : On" : "Sort by Employment Type : Off"}
             </button>
-            <button onClick={toggleJobStatus} className="p-2 ml-2 border">
+            <button onClick={toggleJobStatus} className="p-2 ml-2 mr-2 border">
               {showOpenJobs ? "Show Closed Jobs" : "Show Open Jobs"}
             </button>
+            <FormControl className="border" style={{ minWidth: 200 }}>
+              <InputLabel id="affiliation-id">Select Affiliation</InputLabel>
+              <Select
+                value={affiliation}
+                labelId="affiliation-id"
+                label="Role"
+                id="role"
+                onChange={(e: SelectChangeEvent) => {
+                  setAffiliation(e.target.value);
+                }}
+              >
+                <MenuItem value="" selected disabled>
+                  Select Affiliation
+                </MenuItem>
+                <MenuItem value={"nc-state-dining"}>
+                  NC State Dining
+                </MenuItem>
+                <MenuItem value={"campus-enterprises"}>
+                  Campus Enterprises
+                </MenuItem>
+                <MenuItem value={"wolfpack-outfitters"}>
+                  Wolfpack Outfitters
+                </MenuItem>
+              </Select>
+            </FormControl>
+
+            <button className="bg-red-500 text-white px-4 py-2 rounded p-2 ml-2 border" onClick={handleClearFilter}>Clear</button>
           </div>
         </div>
         <div className="flex flex-row" style={{ height: "calc(100vh - 72px)" }}>
           <JobsListView jobsList={filteredJobList} />
           <JobDetailView />
         </div>
-      </div>
+      </div >
     </>
   );
 };
