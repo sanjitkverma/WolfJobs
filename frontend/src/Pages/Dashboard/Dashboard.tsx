@@ -145,7 +145,8 @@ const Dashboard = () => {
                   applicationList?.find((item) => item.jobid === job._id && item.applicantid === userId);
 
                 // check if the current signed in user has applied for the job
-                return currentUserApplication ? <JobListTile data={job} key={job._id} action={action} /> : <></>;
+                return currentUserApplication && role === "Applicant" ? <JobListTile data={job} key={job._id} action={action} /> :
+                  (role === "Manager" ? <JobListTile data={job} key={job._id} action={action} /> : <></>);
               })}
             </div>
           </>
