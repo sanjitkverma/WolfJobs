@@ -1,4 +1,5 @@
 import {
+  Autocomplete,
   Button,
   FormControl,
   InputLabel,
@@ -9,7 +10,7 @@ import {
   TextField,
 } from "@mui/material";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { useUserStore } from "../../store/UserStore";
@@ -22,7 +23,7 @@ type FormValues = {
   password: string;
   address: string;
   role: string;
-  skills: string;
+  skills: string[];
   phonenumber: string;
   availability: string;
   gender: string;
@@ -57,13 +58,14 @@ const ProfileEdit = ({ props }: { props: any }) => {
   });
 
   const [availabilityDrop, setAvailabilityDtop] = useState(availability);
+  const [skillsDB, setSkillsDB] = useState<string[]>([]); // For fetched skills
 
   const userId = useUserStore((state) => state.id);
   const password = useUserStore((state) => state.password);
 
   const navigate = useNavigate();
 
-  const { register, handleSubmit, formState } = form;
+  const { register, handleSubmit, formState, setValue } = form;
   const { errors } = formState;
 
   const handleSaveProfile = (data: FormValues) => {
@@ -91,6 +93,26 @@ const ProfileEdit = ({ props }: { props: any }) => {
       login(email, password, navigate);
     });
   };
+  
+  // Fetch skills from backend
+  useEffect(() => {
+    const fetchSkills = async () => {
+      try {
+        const response = await fetch("http://localhost:8000/api/v1/users/skills");
+        if (!response.ok) {
+          throw new Error(`Error ${response.status}: ${response.statusText}`);
+        }
+        const data = await response.json();
+        console.log("Fetched skills:", data);
+        setSkillsDB(data);
+      } catch (error) {
+        console.error("Error fetching skills:", error);
+        // Optionally set a fallback or show error message
+        setSkillsDB([]);
+      }
+    };
+    fetchSkills();
+  }, []);
 
   return (
     <>
@@ -117,7 +139,7 @@ const ProfileEdit = ({ props }: { props: any }) => {
             <TextField
               label="Email"
               type="email"
-              {...register("address", {
+              {...register("email", {
                 required: "Email is required",
               })}
               error={!!errors.email}
@@ -137,7 +159,7 @@ const ProfileEdit = ({ props }: { props: any }) => {
               label="Role"
               type="text"
               {...register("role", {
-                required: "Email is required",
+                required: "Role is required",
               })}
               error={!!errors.role}
               helperText={errors.role?.message}
@@ -167,20 +189,26 @@ const ProfileEdit = ({ props }: { props: any }) => {
                 },
               }}
             />
-            <TextField
-              label="Skills"
-              type="text"
-              {...register("skills")}
-              error={!!errors.skills}
-              helperText={errors.skills?.message}
-              sx={{
-                "& label": { paddingLeft: (theme) => theme.spacing(1) },
-                "& input": { paddingLeft: (theme) => theme.spacing(2.5) },
-                "& fieldset": {
-                  paddingLeft: (theme) => theme.spacing(1.5),
-                  borderRadius: "10px",
-                },
-              }}
+            <Autocomplete
+              multiple
+              options={skillsDB}
+              onChange={(_, value) => setValue("skills", value)}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Skills"
+                  error={!!errors.skills}
+                  helperText={errors.skills?.message}
+                  sx={{
+                    "& label": { paddingLeft: (theme) => theme.spacing(1) },
+                    "& input": { paddingLeft: (theme) => theme.spacing(2.5) },
+                    "& fieldset": {
+                      paddingLeft: (theme) => theme.spacing(1.5),
+                      borderRadius: "10px",
+                    },
+                  }}
+                />
+              )}
             />
             <TextField
               label="Phone number"
