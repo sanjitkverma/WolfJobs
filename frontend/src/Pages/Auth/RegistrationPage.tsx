@@ -18,10 +18,12 @@ type FormValues = {
   email: string;
   password: string;
   confirmPassword: string;
-  skills: string;
+  skills: string[];
 };
+const skillOptions = ["Code", "Cook", "Sport"];
 
 const RegistrationPage = () => {
+  const [skills, setSkills] = useState<string[]>([]); // Set up skills state as an array
   const navigate = useNavigate();
   const [role, setRole] = useState("Applicant");
   const [affilation, setAffiliation] = useState("nc-state-dining");
@@ -32,16 +34,22 @@ const RegistrationPage = () => {
       email: "",
       password: "",
       confirmPassword: "",
-      skills: "",
+      skills: [],
     },
   });
-
   const { register, handleSubmit, formState, watch } = form;
   const { errors } = formState;
+  // handle the multiple choices for skills
+  const handleSkillsChange = (event: SelectChangeEvent<string[]>) => {
+    
+    const { value } = event.target;
+    const skills: string[] = Array.isArray(value) ? value : [value];
+    setSkills(skills);
+  };
 
   const onSubmit = (data: FormValues) => {
     console.log("form submitted");
-    console.log(data);
+    console.log(data, skills);
     signup(
       data.email,
       data.password,
@@ -49,8 +57,8 @@ const RegistrationPage = () => {
       data.name,
       role,
       role === "Manager" ? affilation : "",
-      data.skills,
-      navigate
+      skills,
+      navigate,
     );
   };
 
@@ -145,7 +153,7 @@ const RegistrationPage = () => {
                   },
                 }}
               />
-              <TextField
+              {/* <TextField
                 label="Skills"
                 type="text"
                 {...register("skills", {
@@ -163,7 +171,24 @@ const RegistrationPage = () => {
                     borderRadius: "10px",
                   },
                 }}
-              />
+              /> */}
+              <FormControl fullWidth>
+                <InputLabel id="skills-label">Skills</InputLabel>
+                <Select
+                  labelId="skills-label"
+                  id="skills"
+                  multiple
+                  value={skills}
+                  onChange={handleSkillsChange}
+                  renderValue={(selected) => selected.join(', ')} // Display selected skills as a comma-separated list
+                >
+                  {skillOptions.map((skill) => (
+                    <MenuItem key={skill} value={skill}>
+                      {skill}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
               <FormControl>
                 <InputLabel id="role-id">Role</InputLabel>
                 <Select

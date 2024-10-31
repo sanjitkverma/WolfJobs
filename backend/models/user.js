@@ -51,8 +51,8 @@ const userSchema = new mongoose.Schema(
       default: "",
     },
     skills: {
-      type: String,
-      default: "",
+      type: Array,
+      default: [],
     },
     resume: {
       type: String,

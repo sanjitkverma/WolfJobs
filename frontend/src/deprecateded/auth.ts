@@ -1,6 +1,7 @@
 import { toast } from "react-toastify";
 import { getFormBody } from "./apiUtils";
 import { loginURL, signupURL } from "../api/constants";
+import axios from "axios";
 
 export async function login(email: string, password: string, navigate: any) {
   const url = loginURL;
@@ -22,23 +23,20 @@ export async function login(email: string, password: string, navigate: any) {
     });
 }
 
-export function signup(
+export async function signup(
   email: string,
   password: string,
   confirmPassword: string,
   name: string,
   role: string,
   affiliation: string,
-  skills: string,
+  skills: string[],
   navigate: any
 ) {
   const url = signupURL;
-  fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-    body: getFormBody({
+
+  try {
+    const response = await axios.post(url, {
       email,
       password,
       confirm_password: confirmPassword,
@@ -46,15 +44,20 @@ export function signup(
       role,
       skills,
       affiliation,
-    }),
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.success) {
-        localStorage.setItem("token", data.data.token);
-        navigate("/dashboard");
-        return;
-      }
-      toast.error("Sign up Failed");
+    }, {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
     });
+
+    if (response.data.success) {
+      localStorage.setItem("token", response.data.data.token);
+      navigate("/dashboard");
+    } else {
+      toast.error("Sign up Failed");
+    }
+  } catch (error) {
+    // Handle errors, could be network issues, etc.
+    toast.error("Sign up Failed: Unknown error");
+  }
 }

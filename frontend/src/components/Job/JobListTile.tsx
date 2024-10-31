@@ -18,7 +18,7 @@ const JobListTile = (props: any) => {
     const skills = useUserStore((state) => state.skills);
     if (skills && job.requiredSkills) {
       const applicantSkillsArray = skills
-        .split(",")
+        
         .map((skill) => skill.trim().toLowerCase());
       const requiredSkillsArray = job.requiredSkills
         .split(",")

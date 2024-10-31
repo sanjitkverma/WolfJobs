@@ -8,7 +8,7 @@ type UserState = {
   address: string;
   role: string;
   dob: string;
-  skills: string;
+  skills: string[];
   phonenumber: string;
   id: string;
   availability: string;
@@ -46,7 +46,7 @@ export const useUserStore = create<UserState & UserAction>()((set) => ({
   address: "",
   role: "",
   dob: "",
-  skills: "",
+  skills: [],
   phonenumber: "",
   id: "",
   availability: "",
@@ -75,7 +75,7 @@ export const useUserStore = create<UserState & UserAction>()((set) => ({
   updateDob: (dob: string) => {
     set(() => ({ dob: dob }));
   },
-  updateSkills: (skills: string) => {
+  updateSkills: (skills: string[]) => {
     set(() => ({ skills: skills }));
   },
   updatePhonenumber: (phonenumber: string) => {
