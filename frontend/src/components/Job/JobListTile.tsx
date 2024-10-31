@@ -106,9 +106,8 @@ const JobListTile = (props: any) => {
   return (
     <div className="my-3" onClick={handleClick}>
       <div
-        className={`p-3 bg-white rounded-xl shadow-sm ${
-          active ? "border-black" : "border-white"
-        } border`}
+        className={`p-3 bg-white rounded-xl shadow-sm ${active ? "border-black" : "border-white"
+          } border`}
       >
         <div className="flex flex-row">
           <div className="w-4/6">
@@ -140,9 +139,8 @@ const JobListTile = (props: any) => {
               <p className="text-base">
                 <b>Job Status:</b>
                 <span
-                  className={`${
-                    data.status === "closed" ? "text-[#FF5353]" : ""
-                  }`}
+                  className={`${data.status === "closed" ? "text-[#FF5353]" : ""
+                    }`}
                 >
                   &nbsp;<span className="capitalize">{data.status}</span>
                 </span>
@@ -153,9 +151,7 @@ const JobListTile = (props: any) => {
               </p>
               <p className="text-base">
                 {userRole === "Applicant" &&
-                  ((application !== null &&
-                    application?.status === "accepted") ||
-                  application?.status === "rejected" ? (
+                  (application != null && application?.status ? (
                     <span className="capitalize">
                       <b>Application Status:</b>&nbsp;{application?.status}
                     </span>

@@ -7,11 +7,12 @@ import { useUserStore } from "../../store/UserStore";
 import { useJobStore } from "../../store/JobStore";
 import { useApplicationStore } from "../../store/ApplicationStore";
 import JobListTile from "../../components/Job/JobListTile";
-import { Button } from "@mui/material";
+import { Button, ListItem } from "@mui/material";
 
 const Dashboard = () => {
   const naviagte = useNavigate();
 
+  const userId = useUserStore((state) => state.id);
   const updateName = useUserStore((state) => state.updateName);
   const updateEmail = useUserStore((state) => state.updateEmail);
   const updatePassword = useUserStore((state) => state.updatePassword);
@@ -132,14 +133,16 @@ const Dashboard = () => {
                 } else {
                   const application = applicationList?.find(
                     (item) =>
-                      item.jobid === job._id && item.status === "screening"
+                      item.jobid === job._id && item.status === "screening" && item.applicantid === userId
                   );
+
                   action = application
                     ? "view-questionnaire"
                     : "view-application";
                 }
 
-                return <JobListTile data={job} key={job._id} action={action} />;
+                // check if the current signed in user has applied for the job
+                return applicationList?.find((item) => item.jobid === job._id && item.applicantid === userId) ? <JobListTile data={job} key={job._id} action={action} /> : <></>;
               })}
             </div>
           </>
