@@ -71,6 +71,7 @@ module.exports.signUp = async function (req, res) {
       });
     }
 
+    // try to find an existing user from the database for the entered email
     User.findOne({ email: req.body.email }, function (err, user) {
       if (user) {
         res.set("Access-Control-Allow-Origin", "*");
@@ -89,8 +90,9 @@ module.exports.signUp = async function (req, res) {
         });
       }
 
+      // if a user does not exist then create one
       if (!user) {
-        let user = User.create(req.body, function (err, user) {
+        User.create(req.body, function (err, user) {
           if (err) {
             return res.json(500, {
               message: "Internal Server Error",
