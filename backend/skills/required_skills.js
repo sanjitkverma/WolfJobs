@@ -22,6 +22,11 @@ module.exports = {
     "employee training",
     "strategic planning",
     "decision making",
-    "merchandising"  
+    "merchandising",
+    "multitasking",
+    "attention to detail",
+    "supply chain management",
+    "sales forcasting",
+    "financial reporting"
     ]
 };
