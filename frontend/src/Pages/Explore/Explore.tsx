@@ -16,6 +16,7 @@ const Explore = () => {
   const naviagte = useNavigate();
 
   const userSkills = useUserStore((state) => state.skills);
+  const userRole = useUserStore((state) => state.role);
   const updateName = useUserStore((state) => state.updateName);
   const updateAddress = useUserStore((state) => state.updateAddress);
   const updateRole = useUserStore((state) => state.updateRole);
@@ -235,9 +236,15 @@ const Explore = () => {
               <button onClick={toggleJobStatus} className="p-2 ml-2 mr-2 border">
                 {showOpenJobs ? "Show Closed Jobs" : "Show Open Jobs"}
               </button>
-              <button onClick={handleSortByScore} className="p-2 ml-2 mr-2 border">
-                {sortByScore ? "Sort By Score: On" : "Sort By Score: Off"}
-              </button>
+
+              {
+                // score filter only visible for applicants
+                userRole === "Applicant" &&
+                <button onClick={handleSortByScore} className="p-2 ml-2 mr-2 border">
+                  {sortByScore ? "Sort By Score: On" : "Sort By Score: Off"}
+                </button>
+              }
+
               <FormControl className="border" style={{ minWidth: 200 }}>
                 <InputLabel id="affiliation-id">Select Affiliation</InputLabel>
                 <Select
