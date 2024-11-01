@@ -1,3 +1,5 @@
+// New component for the manager viewer to fetch and view the resume of applicant used while application
+
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Document, Page, pdfjs } from "react-pdf";
@@ -10,9 +12,9 @@ import "react-pdf/dist/esm/Page/AnnotationLayer.css";
 // Set up pdf worker
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
-function ResumeViewer() {
+function ResumeManagerViewer() {
   // get the applicant id
-  const { applicantId } = useParams();
+  const { resumeId } = useParams();
 
   const [numPages, setNumPages] = useState<number | null>(null);
   const [pageNumber, setPageNumber] = useState<number>(1);
@@ -37,8 +39,9 @@ function ResumeViewer() {
   useEffect(() => {
     async function getResume() {
       try {
+        console.log("res id", resumeId);
         const response = await axios.get(
-          `http://localhost:8000/users/applicantresume/${applicantId}`,
+          `http://localhost:8000/users/resume/${resumeId}`,
           {
             responseType: "blob",
           }
@@ -50,7 +53,7 @@ function ResumeViewer() {
       }
     }
     getResume();
-  }, [applicantId]);
+  }, [resumeId]);
 
   // Cleanup the blob URL
   useEffect(() => {
@@ -93,4 +96,4 @@ function ResumeViewer() {
   );
 }
 
-export default ResumeViewer;
+export default ResumeManagerViewer;

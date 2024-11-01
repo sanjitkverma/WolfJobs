@@ -86,6 +86,10 @@ const applicationSchema = new mongoose.Schema({
     type: String,
     default: "",
   },
+  resumeId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Resume",
+  },
 });
 
 const Application = mongoose.model("Application", applicationSchema);
