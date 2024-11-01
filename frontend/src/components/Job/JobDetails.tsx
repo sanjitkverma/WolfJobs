@@ -358,6 +358,7 @@ const JobDetail = (props: any) => {
               style={{
                 background: "#FF5353",
                 borderRadius: "10px",
+                marginLeft: "15px",
                 textTransform: "none",
                 fontSize: "18px",
                 width: "250px",
