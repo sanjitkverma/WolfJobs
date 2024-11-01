@@ -333,8 +333,8 @@ module.exports.createApplication = async function (req, res) {
     }
 
     // Finding the resume using applicantId
-    const userResume = await Resume.findOne({
-      applicantId: req.body.applicantid,
+    const userResume = await User.findOne({
+      id: req.body.applicantid,
     });
 
     console.log(userResume.id);
@@ -357,7 +357,7 @@ module.exports.createApplication = async function (req, res) {
       jobname: req.body.jobname,
       jobid: req.body.jobid,
       managerid: req.body.managerid,
-      resumeId: userResume._id,
+      resumeId: userResume.resumeId,
     });
     res.set("Access-Control-Allow-Origin", "*");
     await application.save();

@@ -101,13 +101,13 @@ message: "Job status is updated Successfully",
 
 #### Parameters-
 
-ID, Name, Address, PhoneNumber, Hours, DOB, gender, Skills, JobName, JobId, MangerId
+ID, Name, Address, PhoneNumber, Hours, DOB, gender, Skills, JobName, JobId, MangerId, resumeId
 
 #### Method: "Post"
 
 #### Description:
 
-Function makes a new application whenever an applicant applies.
+Function makes a new application whenever an applicant applies and takes the resume from the user's profile when applying.
 
 #### Output:
 
@@ -157,5 +157,25 @@ Changes the status of the application from pending to Rejected.
 message: "Application is updated Successfully",
 data: {
 application,
+},
+success: true
+
+### IX. Function Get Resume by Id
+
+### Parameters-
+
+resumeId
+
+### Method: "GET"
+
+### Description:
+
+Fetches the Resume associated with the specific Job Application
+
+### Output:
+
+data: {
+resume.fileName,
+application/pdf,
 },
 success: true
