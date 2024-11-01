@@ -87,20 +87,6 @@ const JobDetail = (props: any) => {
     e.preventDefault();
 
     try {
-      // Fetch user details to get the resume data
-      // const userResponse = await axios.get(
-      //   `http://localhost:8000/api/v1/users/getprofile/${userId}`
-      // );
-
-      // if (!userResponse.data.user || !userResponse.data.user.resumeId) {
-      //   toast.error(
-      //     "Resume not found. Please upload your resume before applying."
-      //   );
-      //   return;
-      // }
-
-      // const resumeData = userResponse.data.user.resumeId;
-
       const body = {
         applicantname,
         applicantid: userId,

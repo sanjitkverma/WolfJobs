@@ -78,6 +78,7 @@ const JobScreening = (props: any) => {
                 )}
                 <div className="flex justify-center px-2 py-1 ml-2 border border-gray-300 rounded-md">
                   <a
+                    // Changed the routing to appropriate endpoint
                     href={`/resumemanagerviewer/${item.resumeId}`}
                     className="text-red-500"
                   >
