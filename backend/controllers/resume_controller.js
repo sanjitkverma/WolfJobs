@@ -17,17 +17,6 @@ const upload = multer({
 
 // Resume upload handler
 exports.uploadResume = async (req, res) => {
-  // first look for a resume with the same applicantId
-  // const existingResume = await Resume.findOne({
-  //   applicantId: req.body.id,
-  // });
-
-  // if (existingResume) {
-  //   // delete the existing resume
-  //   existingResume.remove();
-  // }
-
-  // find the user and add the resume
   let user = await User.findOne({ _id: req.body.id });
 
   if (!user) {
