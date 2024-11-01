@@ -69,6 +69,21 @@ Previously the jobs did not have the department name. We added department for ea
 #### Styling improvements
 Design improvements were made to make the app more user friendly and intuitive. Previously, there were many design inconsistencies like no landing page for the website, the button shapes, icon colors and fonts did not match everywhere. These were fixed by implementing a lot of changes in the frontend. All of these changes can be viewed in the feature videos in the main README.
 
+### 💎 Email Service Feature
+The email service feature allows applicants to view the their application status in their email as soon as the manager made their decision to accept or reject the application. If the applicant is accepted past the screening round, they will be notified via email to fill out the questionnaire for the final round. In the grading process, upon the manager's decision to accept or reject an applicant, another email will be sent to notify the applicant of their status.
+
+### 💎 Skill Matching Feature
+The skill matching feature will calculate and display the percentage of how closely the applicant's skills align with the job's required skills. The skills are fetched from the skills database that contains a list of skills for all jobs.
+
+### 💎 Filter & Sort Algorithms
+The filter algorithm will be able to filter out job listings based on affiliation and skills. There is also a sorting algorithm to sort the job listings based on the highest skill matching percentage.
+
+### 💎 Support for Multiple Applicants
+Fixed a major bug in the application where each job allows only one applicant. Now, for every job, multiple applications are allowed and the manager can decide to accept or reject multiple applicants of the same job.
+
+### 💎 Support for Unique Resumes
+Fixed a major bug in the application where applicants can only upload one resume for every job. Now, applicants are allowed to upload a unique resume for each job listing.
+
 
 
 
