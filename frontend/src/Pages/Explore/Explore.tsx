@@ -49,6 +49,8 @@ const Explore = () => {
   const [sortByEmploymentType, setSortByEmploymentType] = useState(false);
   const [showOpenJobs, setShowOpenJobs] = useState(true);  // true for open jobs, false for closed jobs
   const [filterLocation, setFilterLocation] = useState("");
+  const [filterMinSalary, setFilterMinSalary] = useState("");
+  const [filterMaxSalary, setFilterMaxSalary] = useState("");
   const [showFilterDropdown, setShowFilterDropdown] = useState(false);
 
   const handleSearchChange = (event: any) => {
@@ -157,11 +159,28 @@ const Explore = () => {
       );
 
     }
+    //filter for max and min salary
+    if (filterMinSalary !== "" || filterMaxSalary !== "") {
+
+      updatedList = updatedList.filter((job) => {
+
+        const jobPay = parseFloat(job.pay);
+
+        const minSalary = parseFloat(filterMinSalary) || 0;
+
+        const maxSalary = parseFloat(filterMaxSalary) || Infinity;
+
+        return jobPay >= minSalary && jobPay <= maxSalary;
+
+      });
+
+    }
 
     updatedList = updatedList.filter(job => showOpenJobs ? job.status === "open" : job.status === "closed");
 
     setFilteredJobList(updatedList);
-  }, [searchTerm, jobList, sortHighestPay, sortAlphabeticallyByCity, sortByEmploymentType, showOpenJobs,filterLocation]);
+  }, [searchTerm, jobList, sortHighestPay, sortAlphabeticallyByCity, sortByEmploymentType, showOpenJobs, filterLocation, filterMinSalary,
+    filterMaxSalary]);
 
   return (
     <>
@@ -176,7 +195,7 @@ const Explore = () => {
               className="w-full p-2"
             />
           </div>
-          
+
 
           {/* Button container with flex layout */}
 
@@ -229,6 +248,46 @@ const Explore = () => {
                     />
 
                   </div>
+                  <div className="mb-2">
+
+                    <label>Min Salary:</label>
+
+                    <input
+
+                      type="number"
+
+                      value={filterMinSalary}
+
+                      onChange={(e) => setFilterMinSalary(e.target.value)}
+
+                      className="w-full p-2 border"
+
+                      placeholder="Enter min salary"
+
+                    />
+
+                  </div>
+
+                  <div className="mb-2">
+
+                    <label>Max Salary:</label>
+
+                    <input
+
+                      type="number"
+
+                      value={filterMaxSalary}
+
+                      onChange={(e) => setFilterMaxSalary(e.target.value)}
+
+                      className="w-full p-2 border"
+
+                      placeholder="Enter max salary"
+
+                    />
+
+                  </div>
+
                 </div>
 
               )}
