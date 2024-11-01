@@ -1,128 +1,98 @@
-const request = require("supertest");
-const express = require("express");
-const mongoose = require("mongoose");
-const jwt = require("jsonwebtoken");
-const User = require("../models/user");
-const Resume = require("../models/resume");
-const Application = require("../models/application");
-const usersApi = require("../controllers/api/v1/users_api");
+const { createApplication } = require("../controllers/api/v1/users_api"); // Update with your actual path
+const Application = require("../models/application"); // Update with your actual path
+const User = require("../models/user"); // Update with your actual path
 
-const app = express();
-app.use(express.json());
-app.post("/create-application", usersApi.createApplication);
+jest.mock("../models/application");
+jest.mock("../models/user");
 
-describe("POST /create-application", () => {
-  let server;
-  let user;
-  let token;
-  let resume;
-  let application;
+describe("createApplication", () => {
+  let req, res;
 
-  beforeAll(async () => {
-    server = app.listen(3000);
-    mongoose.connect("mongodb://localhost:27017/test", {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-
-    user = new User({
-      email: "test@example.com",
-      password: "password123",
-      name: "Test User",
-    });
-    await user.save();
-
-    resume = new Resume({
-      applicantId: user._id,
-      resumeData: "Sample Resume Data",
-    });
-    await resume.save();
-  });
-
-  afterAll(async () => {
-    await User.deleteMany({});
-    await Resume.deleteMany({});
-    await Application.deleteMany({});
-    await mongoose.connection.close();
-    server.close();
-  });
-
-  it("should return 400 if the user has already applied for the job", async () => {
-    application = new Application({
-      applicantid: user._id,
-      jobid: "job123",
-      resumeId: resume._id,
-    });
-    await application.save();
-
-    const res = await request(app).post("/create-application").send({
-      applicantid: user._id,
-      jobid: "job123",
-    });
-
-    expect(res.status).toBe(400);
-    expect(res.body.message).toBe("You have already applied for the job");
-  });
-
-  it("should return 404 if the resume is not found", async () => {
-    const res = await request(app).post("/create-application").send({
-      applicantid: mongoose.Types.ObjectId(),
-      jobid: "job123",
-    });
-
-    expect(res.status).toBe(404);
-    expect(res.body.message).toBe("Resume not found in profile");
-  });
-
-  it("should create a new application if valid data is provided", async () => {
-    const res = await request(app)
-      .post("/create-application")
-      .send({
-        applicantid: user._id,
-        applicantname: "Test User",
-        applicantemail: "test@example.com",
+  beforeEach(() => {
+    req = {
+      body: {
+        applicantId: "applicantId123",
+        jobId: "jobId123",
+        applicantname: "John Doe",
+        applicantemail: "john@example.com",
         applicantskills: ["JavaScript", "Node.js"],
         skills: ["JavaScript", "Node.js"],
-        address: "123 Test St",
-        phonenumber: "1234567890",
-        hours: 40,
+        address: "123 Main St",
+        phonenumber: "555-555-5555",
+        hours: "Full-time",
         dob: "1990-01-01",
         gender: "Male",
         jobname: "Software Developer",
-        jobid: "job456",
-        managerid: "manager123",
-      });
+        managerid: "managerId123",
+      },
+    };
 
-    expect(res.status).toBe(200);
-    expect(res.body.data.application).toHaveProperty("_id");
-    expect(res.body.data.application.applicantid).toBe(String(user._id));
-    expect(res.body.data.application.jobid).toBe("job456");
+    res = {
+      set: jest.fn().mockReturnThis(),
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
   });
 
-  it("should return 500 if there is an internal server error", async () => {
-    jest.spyOn(Application.prototype, "save").mockImplementationOnce(() => {
-      throw new Error("Internal server error");
+  it("should return error if application already exists", async () => {
+    Application.findOne.mockResolvedValueOnce(true); // Mocking existing application
+
+    await createApplication(req, res);
+
+    expect(res.set).toHaveBeenCalledWith("Access-Control-Allow-Origin", "*");
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({
+      message: "You have already applied for the job",
+      error: true,
+    });
+  });
+
+  it("should return error if user resume is not found", async () => {
+    Application.findOne.mockResolvedValueOnce(null); // No existing application
+    User.findOne.mockResolvedValueOnce(null); // Resume not found
+
+    await createApplication(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(404);
+    expect(res.json).toHaveBeenCalledWith({
+      message: "Resume not found in profile",
+    });
+  });
+
+  it("should create an application successfully", async () => {
+    const mockResume = { resumeId: "resumeId123" };
+    const savedApplication = {
+      applicantid: req.body.applicantId,
+      jobid: req.body.jobId,
+      resumeId: mockResume.resumeId,
+    };
+
+    Application.findOne.mockResolvedValueOnce(null); // No existing application
+    User.findOne.mockResolvedValueOnce(mockResume); // Mocking resume found
+    Application.mockImplementation(() => ({
+      ...savedApplication,
+      save: jest.fn().mockResolvedValueOnce(savedApplication), // Mock save method to resolve with the application object
+    }));
+
+    await createApplication(req, res);
+
+    expect(res.set).toHaveBeenCalledWith("Access-Control-Allow-Origin", "*");
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith({
+      data: {
+        application: expect.objectContaining(savedApplication), // Ensure it matches the saved application
+      },
+    });
+  });
+
+  it("should handle internal server error", async () => {
+    Application.findOne.mockImplementationOnce(() => {
+      throw new Error("DB error");
     });
 
-    const res = await request(app)
-      .post("/create-application")
-      .send({
-        applicantid: user._id,
-        applicantname: "Test User",
-        applicantemail: "test@example.com",
-        applicantskills: ["JavaScript", "Node.js"],
-        skills: ["JavaScript", "Node.js"],
-        address: "123 Test St",
-        phonenumber: "1234567890",
-        hours: 40,
-        dob: "1990-01-01",
-        gender: "Male",
-        jobname: "Software Developer",
-        jobid: "job456",
-        managerid: "manager123",
-      });
+    await createApplication(req, res);
 
-    expect(res.status).toBe(500);
-    expect(res.body.message).toBe("Internal server error");
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith({ message: "Internal server error" });
   });
 });

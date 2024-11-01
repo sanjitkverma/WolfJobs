@@ -337,7 +337,6 @@ module.exports.createApplication = async function (req, res) {
       id: req.body.applicantid,
     });
 
-    console.log(userResume.id);
     if (!userResume) {
       return res.status(404).json({ message: "Resume not found in profile" });
     }
