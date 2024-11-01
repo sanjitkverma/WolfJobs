@@ -37,6 +37,7 @@ function ResumeManagerViewer() {
   useEffect(() => {
     async function getResume() {
       try {
+        console.log("res id", resumeId);
         const response = await axios.get(
           `http://localhost:8000/users/resume/${resumeId}`,
           {
@@ -93,4 +94,4 @@ function ResumeManagerViewer() {
   );
 }
 
-export default ResumeViewer;
+export default ResumeManagerViewer;
