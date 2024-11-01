@@ -86,10 +86,9 @@ const applicationSchema = new mongoose.Schema({
     type: String,
     default: "",
   },
-  resumeSnapshot: {
-    fileName: String,
-    fileData: Buffer,
-    contentType: String,
+  resumeId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Resume",
   },
 });
 

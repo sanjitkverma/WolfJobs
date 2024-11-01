@@ -31,7 +31,8 @@ router.post(
   resumeController.uploadResume // The controller function to handle the resume upload
 );
 
-router.get("/applications/:applicationId/resume", resumeController.getResume);
+// router.get("/applications/:applicationId/resume", resumeController.getResume);
+router.get("/applicantresume/:id", resumeController.getResume);
 
 router.get("/sign-out", usersController.destroySession);
 

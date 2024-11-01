@@ -12,7 +12,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/$
 
 function ResumeViewer() {
   // get the applicant id
-  const { applicantId, applicationId } = useParams();
+  const { applicantId } = useParams();
 
   const [numPages, setNumPages] = useState<number | null>(null);
   const [pageNumber, setPageNumber] = useState<number>(1);
@@ -38,7 +38,7 @@ function ResumeViewer() {
     async function getResume() {
       try {
         const response = await axios.get(
-          `http://localhost:8000/users/applications/${applicationId}/resume`,
+          `http://localhost:8000/users/applicantresume/${applicantId}`,
           {
             responseType: "blob",
           }

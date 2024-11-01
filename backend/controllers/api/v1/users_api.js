@@ -1,11 +1,12 @@
 const User = require("../../../models/user");
+const Resume = require("../../../models/resume");
 const jwt = require("jsonwebtoken");
 const Food = require("../../../models/food");
 const History = require("../../../models/history");
 const Job = require("../../../models/job");
 const Application = require("../../../models/application");
 const AuthOtp = require("../../../models/authOtp");
-const email = require('../../../models/email');
+const email = require("../../../models/email");
 
 const nodemailer = require("nodemailer");
 const { application } = require("express");
@@ -302,27 +303,15 @@ module.exports.index = async function (req, res) {
 };
 
 module.exports.fetchApplication = async function (req, res) {
-  try {
-    const application = await Application.findById(
-      req.params.applicationId
-    ).select("resumeSnapshot");
+  let application = await Application.find({}).sort("-createdAt");
 
   //Whenever we want to send back JSON data
   res.set("Access-Control-Allow-Origin", "*");
   return res.status(200).json({
     message: "List of Applications",
-    if (!application) {
-      return res.status(404).json({ message: "Application not found" });
-    }
 
-    return res.json(200).json({
-      message: "Application found",
-      application,
-    })})
-  } catch (err) {
-    console.log(err);
-    retur.res.status(500).json({ message: "Internal server error" });
-  }
+    application: application,
+  });
 };
 
 module.exports.createApplication = async function (req, res) {
@@ -343,10 +332,16 @@ module.exports.createApplication = async function (req, res) {
       });
     }
 
-    const user = await User.findById(req.body.applicationid).populate(
-      "resumeId"
-    );
-    if (!user || !user.resumeId) {
+    // const user = await User.findById(req.body.applicationid).populate(
+    //   "resumeId"
+    // );
+
+    const userResume = await Resume.findOne({
+      applicantId: req.body.applicantid,
+    });
+
+    console.log(userResume.id);
+    if (!userResume) {
       return res.status(404).json({ message: "Resume not found in profile" });
     }
 
@@ -364,23 +359,16 @@ module.exports.createApplication = async function (req, res) {
       jobname: req.body.jobname,
       jobid: req.body.jobid,
       managerid: req.body.managerid,
+      resumeId: userResume._id,
     });
     res.set("Access-Control-Allow-Origin", "*");
+    await application.save();
     return res.status(200).json({
       data: {
         application: application,
         //token: jwt.sign(user.toJSON(), env.jwt_secret, { expiresIn: "100000" })
-      resumeSnapshot: {
-        fileName: user.resumeId.fileName,
-        fileData: user.resumeId.fileData,
-        contentType: user.resumeId.contentType,
       },
     });
-
-    await application.save();
-    return res
-      .status(201)
-      .json({ message: "Application created", data: { application } });
   } catch (err) {
     console.log(err);
     return res.status(500).json({ message: "Internal server error" });
@@ -411,30 +399,40 @@ module.exports.modifyApplication = async function (req, res) {
     const subject = `Update on your application for ${application.jobname}`;
     let html;
 
-    if (newStatus === "screening") { // Accepted for screening
+    if (newStatus === "screening") {
+      // Accepted for screening
       // General email for other statuses
       html = `<p>Dear ${applicant.name},</p>
         <p>Your application status for the position of <strong>${application.jobname}</strong> has been accepted after screening. You may now fill out the questionnaire in our website for further evaluation.</p>
         <p>Best regards,<br>WolfJobs Hiring Team</p>`;
-    } else if (newStatus === "accepted") {  // Accepted
+    } else if (newStatus === "accepted") {
+      // Accepted
       html = `<p>Dear ${applicant.name},</p>
         <p>We are pleased to inform you that your application for the position of <strong>${application.jobname}</strong> has been accepted!</p>
         <p>Please log in to our website for more details.</p>
         <p>Best regards,<br>WolfJobs Hiring Team</p>`;
-    } else if (newStatus === "rejected") {  // Rejected
+    } else if (newStatus === "rejected") {
+      // Rejected
       html = `<p>Dear ${applicant.name},</p>
         <p>We regret to inform you that your application for the position of <strong>${application.jobname}</strong> has been rejected.</p>
         <p>Thank you for your interest, and we encourage you to apply for other opportunities in the future.</p>
         <p>Best regards,<br>WolfJobs Hiring Team</p>`;
     }
 
-    if (newStatus === "screening" || newStatus === "accepted" || newStatus === "rejected") {
+    if (
+      newStatus === "screening" ||
+      newStatus === "accepted" ||
+      newStatus === "rejected"
+    ) {
       // Call the email sending function
       try {
         await email.sendEmail(applicant.email, subject, html);
       } catch (emailError) {
         console.error("Error sending email:", emailError);
-        return res.status(500).json({ message: "Application status updated, but failed to send email notification" });
+        return res.status(500).json({
+          message:
+            "Application status updated, but failed to send email notification",
+        });
       }
     }
 

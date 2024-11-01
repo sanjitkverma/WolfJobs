@@ -88,18 +88,18 @@ const JobDetail = (props: any) => {
 
     try {
       // Fetch user details to get the resume data
-      const userResponse = await axios.get(
-        `http://localhost:8000/api/v1/users/${userId}`
-      );
+      // const userResponse = await axios.get(
+      //   `http://localhost:8000/api/v1/users/getprofile/${userId}`
+      // );
 
-      if (!userResponse.data.user || !userResponse.data.user.resumeId) {
-        toast.error(
-          "Resume not found. Please upload your resume before applying."
-        );
-        return;
-      }
+      // if (!userResponse.data.user || !userResponse.data.user.resumeId) {
+      //   toast.error(
+      //     "Resume not found. Please upload your resume before applying."
+      //   );
+      //   return;
+      // }
 
-      const resumeData = userResponse.data.user.resumeId;
+      // const resumeData = userResponse.data.user.resumeId;
 
       const body = {
         applicantname,
@@ -110,12 +110,6 @@ const JobDetail = (props: any) => {
         managerid: jobData.managerid,
         jobname: jobData.name,
         jobid: jobData._id,
-        // Add resume snapshot data from user's resume
-        resumeSnapshot: {
-          fileName: resumeData.fileName,
-          fileData: resumeData.fileData,
-          contentType: resumeData.contentType,
-        },
       };
 
       const response = await axios.post(
@@ -123,7 +117,7 @@ const JobDetail = (props: any) => {
         body
       );
 
-      if (response.status === 201) {
+      if (response.status === 200) {
         toast.success("Applied successfully");
         location.reload();
       } else {

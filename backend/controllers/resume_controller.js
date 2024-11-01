@@ -56,45 +56,19 @@ exports.uploadResume = async (req, res) => {
 
 exports.getResume = async (req, res) => {
   try {
-    // Retrieve the application by ID to get the snapshot of the resume submitted with the application
-    const application = await Application.findById(
-      req.params.applicationId
-    ).select("resumeSnapshot");
-
-    if (!application || !application.resumeSnapshot) {
-      return res
-        .status(404)
-        .send({ error: "Resume not found in this application." });
+    const resume = await Resume.findOne({ applicantId: req.params.id });
+    if (!resume) {
+      return res.status(404).send({ error: "Resume not found" });
     }
-
-    const { fileName, fileData, contentType } = application.resumeSnapshot;
-
-    // Set headers for the PDF file and return the file data
-    res.set("Content-Type", contentType);
-    res.set("Content-Disposition", `inline; filename="${fileName}"`);
-    res.send(fileData);
-  } catch (error) {
-    console.error("Error fetching resume:", error);
-    res.status(500).send({ error: "Internal Server Error" });
-  }
-};
-
-exports.getApplicationResume = async (req, res) => {
-  try {
-    const application = await Application.findById(req.params.applicationId);
-    if (!application || !application.resumeSnapshot) {
-      return res.status(404).send({ error: "Resume snapshot not found" });
-    }
-    res.set("Content-Type", application.resumeSnapshot.contentType);
-    res.set(
-      "Content-Disposition",
-      `inline; filename=${application.resumeSnapshot.fileName}`
-    );
-    res.send(application.resumeSnapshot.fileData);
+    res.set("Content-Type", "application/pdf");
+    // send file name
+    res.set("Content-Disposition", `inline; filename=${resume.fileName}`);
+    res.send(resume.fileData);
   } catch (error) {
     res.status(400).send({ error: error.message });
   }
 };
+
 // Make sure to export the multer upload as well
 exports.upload = upload;
 
