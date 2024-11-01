@@ -1,3 +1,5 @@
+// New component for the manager viewer to fetch and view the resume of applicant used while application
+
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Document, Page, pdfjs } from "react-pdf";
