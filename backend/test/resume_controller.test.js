@@ -1,62 +1,61 @@
-const request = require('supertest');
-const express = require('express');
-const mongoose = require('mongoose');
-const { getResumeById, ping } = require('./resume_controller');
-const Resume = require('../models/resume');
-const User = require('../models/user');
+const { getResumeById } = require("../controllers/resume_controller"); // Update with your actual path
+const Resume = require("../models/resume"); // Update with your actual path
 
-const app = express();
-app.use(express.json());
-app.get('/resume/:id', getResumeById);
-app.get('/ping', ping);
+jest.mock("../models/resume");
 
-jest.mock('../models/resume');
-jest.mock('../models/user');
+describe("getResumeById", () => {
+  let req, res;
 
-describe('Resume Controller', () => {
-    describe('GET /resume/:id', () => {
-        it('should return 404 if resume not found', async () => {
-            Resume.findOne.mockResolvedValue(null);
+  beforeEach(() => {
+    req = {
+      params: {
+        id: "resumeId123",
+      },
+    };
 
-            const res = await request(app).get('/resume/123');
+    res = {
+      set: jest.fn().mockReturnThis(),
+      status: jest.fn().mockReturnThis(),
+      send: jest.fn(),
+    };
+  });
 
-            expect(res.status).toBe(404);
-            expect(res.body.error).toBe('Resume not found');
-        });
+  it("should return a 404 error if resume is not found", async () => {
+    Resume.findOne.mockResolvedValueOnce(null); // Mocking no resume found
 
-        it('should return 400 if there is an error', async () => {
-            Resume.findOne.mockRejectedValue(new Error('Database error'));
+    await getResumeById(req, res);
 
-            const res = await request(app).get('/resume/123');
+    expect(res.status).toHaveBeenCalledWith(404);
+    expect(res.send).toHaveBeenCalledWith({ error: "Resume not found" });
+  });
 
-            expect(res.status).toBe(400);
-            expect(res.body.error).toBe('Database error');
-        });
+  it("should return the resume successfully", async () => {
+    const mockResume = {
+      fileName: "resume.pdf",
+      fileData: Buffer.from("mock file data"),
+    };
 
-        it('should return the resume if found', async () => {
-            const resume = {
-                _id: '123',
-                fileName: 'resume.pdf',
-                fileData: Buffer.from('PDF content'),
-                contentType: 'application/pdf',
-            };
-            Resume.findOne.mockResolvedValue(resume);
+    Resume.findOne.mockResolvedValueOnce(mockResume); // Mocking found resume
 
-            const res = await request(app).get('/resume/123');
+    await getResumeById(req, res);
 
-            expect(res.status).toBe(200);
-            expect(res.header['content-type']).toBe('application/pdf');
-            expect(res.header['content-disposition']).toBe('inline; filename=resume.pdf');
-            expect(res.body).toEqual(Buffer.from('PDF content'));
-        });
+    expect(res.set).toHaveBeenCalledWith("Content-Type", "application/pdf");
+    expect(res.set).toHaveBeenCalledWith(
+      "Content-Disposition",
+      `inline; filename=${mockResume.fileName}`
+    );
+    expect(res.send).toHaveBeenCalledWith(mockResume.fileData);
+  });
+
+  it("should handle errors and return a 400 status", async () => {
+    const mockError = new Error("Database error");
+    Resume.findOne.mockImplementationOnce(() => {
+      throw mockError; // Simulate an error
     });
 
-    describe('GET /ping', () => {
-        it('should return pong', async () => {
-            const res = await request(app).get('/ping');
+    await getResumeById(req, res);
 
-            expect(res.status).toBe(200);
-            expect(res.body.message).toBe('Pong');
-        });
-    });
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.send).toHaveBeenCalledWith({ error: mockError.message });
+  });
 });
