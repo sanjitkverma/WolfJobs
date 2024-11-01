@@ -332,10 +332,7 @@ module.exports.createApplication = async function (req, res) {
       });
     }
 
-    // const user = await User.findById(req.body.applicationid).populate(
-    //   "resumeId"
-    // );
-
+    // Finding the resume using applicantId
     const userResume = await Resume.findOne({
       applicantId: req.body.applicantid,
     });
@@ -345,6 +342,7 @@ module.exports.createApplication = async function (req, res) {
       return res.status(404).json({ message: "Resume not found in profile" });
     }
 
+    //passing the resumeId in the body while applying for a job
     const application = new Application({
       applicantid: req.body.applicantid,
       applicantname: req.body.applicantname,
