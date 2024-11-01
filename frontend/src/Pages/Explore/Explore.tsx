@@ -48,6 +48,8 @@ const Explore = () => {
   const [sortAlphabeticallyByCity, setSortAlphabeticallyByCity] = useState(false);
   const [sortByEmploymentType, setSortByEmploymentType] = useState(false);
   const [showOpenJobs, setShowOpenJobs] = useState(true);  // true for open jobs, false for closed jobs
+  const [filterLocation, setFilterLocation] = useState("");
+  const [showFilterDropdown, setShowFilterDropdown] = useState(false);
 
   const handleSearchChange = (event: any) => {
     setSearchTerm(event.target.value);
@@ -146,10 +148,20 @@ const Explore = () => {
       });
     }
 
+    if (filterLocation !== "") {
+
+      updatedList = updatedList.filter((job) =>
+
+        job.location.toLowerCase().includes(filterLocation.toLowerCase())
+
+      );
+
+    }
+
     updatedList = updatedList.filter(job => showOpenJobs ? job.status === "open" : job.status === "closed");
 
     setFilteredJobList(updatedList);
-  }, [searchTerm, jobList, sortHighestPay, sortAlphabeticallyByCity, sortByEmploymentType, showOpenJobs]);
+  }, [searchTerm, jobList, sortHighestPay, sortAlphabeticallyByCity, sortByEmploymentType, showOpenJobs,filterLocation]);
 
   return (
     <>
@@ -164,7 +176,11 @@ const Explore = () => {
               className="w-full p-2"
             />
           </div>
-          <div>
+          
+
+          {/* Button container with flex layout */}
+
+          <div className="flex flex-row space-x-2 mb-4">
             <button onClick={handleSortChange} className="p-2 ml-2 border">
               {sortHighestPay ? "Sort by High Pay : On" : "Sort by Highest Pay : Off"}
             </button>
@@ -177,6 +193,46 @@ const Explore = () => {
             <button onClick={toggleJobStatus} className="p-2 ml-2 border">
               {showOpenJobs ? "Show Closed Jobs" : "Show Open Jobs"}
             </button>
+            {/* Filter Dropdown */}
+            <div className="relative">
+
+              <button
+
+                onClick={() => setShowFilterDropdown(!showFilterDropdown)}
+
+                className="p-2 border">
+
+                Filters
+
+              </button>
+
+              {showFilterDropdown && (
+
+                <div className="absolute mt-2 w-48 bg-white border shadow-lg p-4 z-10">
+
+                  <div className="mb-2">
+
+                    <label>Location:</label>
+
+                    <input
+
+                      type="text"
+
+                      value={filterLocation}
+
+                      onChange={(e) => setFilterLocation(e.target.value)}
+
+                      className="w-full p-2 border"
+
+                      placeholder="Enter location"
+
+                    />
+
+                  </div>
+                </div>
+
+              )}
+            </div>
           </div>
         </div>
         <div className="flex flex-row" style={{ height: "calc(100vh - 72px)" }}>
