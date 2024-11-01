@@ -86,6 +86,11 @@ const applicationSchema = new mongoose.Schema({
     type: String,
     default: "",
   },
+  resumeSnapshot: {
+    fileName: String,
+    fileData: Buffer,
+    contentType: String,
+  },
 });
 
 const Application = mongoose.model("Application", applicationSchema);

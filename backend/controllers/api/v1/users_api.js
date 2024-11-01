@@ -8,6 +8,7 @@ const AuthOtp = require("../../../models/authOtp");
 const email = require('../../../models/email');
 
 const nodemailer = require("nodemailer");
+const { application } = require("express");
 
 require("dotenv").config();
 
@@ -301,15 +302,27 @@ module.exports.index = async function (req, res) {
 };
 
 module.exports.fetchApplication = async function (req, res) {
-  let application = await Application.find({}).sort("-createdAt");
+  try {
+    const application = await Application.findById(
+      req.params.applicationId
+    ).select("resumeSnapshot");
 
   //Whenever we want to send back JSON data
   res.set("Access-Control-Allow-Origin", "*");
   return res.status(200).json({
     message: "List of Applications",
+    if (!application) {
+      return res.status(404).json({ message: "Application not found" });
+    }
 
-    application: application,
-  });
+    return res.json(200).json({
+      message: "Application found",
+      application,
+    })})
+  } catch (err) {
+    console.log(err);
+    retur.res.status(500).json({ message: "Internal server error" });
+  }
 };
 
 module.exports.createApplication = async function (req, res) {
@@ -330,8 +343,14 @@ module.exports.createApplication = async function (req, res) {
       });
     }
 
-    let application = await Application.create({
-      // applicantemail: req.body.applicantemail,
+    const user = await User.findById(req.body.applicationid).populate(
+      "resumeId"
+    );
+    if (!user || !user.resumeId) {
+      return res.status(404).json({ message: "Resume not found in profile" });
+    }
+
+    const application = new Application({
       applicantid: req.body.applicantid,
       applicantname: req.body.applicantname,
       applicantemail: req.body.applicantemail,
@@ -351,16 +370,20 @@ module.exports.createApplication = async function (req, res) {
       data: {
         application: application,
         //token: jwt.sign(user.toJSON(), env.jwt_secret, { expiresIn: "100000" })
+      resumeSnapshot: {
+        fileName: user.resumeId.fileName,
+        fileData: user.resumeId.fileData,
+        contentType: user.resumeId.contentType,
       },
-      message: "Job Created!!",
-      success: true,
     });
+
+    await application.save();
+    return res
+      .status(201)
+      .json({ message: "Application created", data: { application } });
   } catch (err) {
     console.log(err);
-
-    return res.status(500).json({
-      message: "NOT CREATED",
-    });
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
 
@@ -550,5 +573,3 @@ module.exports.verifyOtp = async function (req, res) {
     });
   }
 };
-
-
