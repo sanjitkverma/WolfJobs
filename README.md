@@ -29,7 +29,16 @@
 ![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white)
 ![RestAPI](https://img.shields.io/badge/RestAPI-005571?style=for-the-badge&logo=restapi)
 
-# What's New:
+# New Features!
+
+- **Multiple Applications**: Allow support for multiple applicants applying for the same job.
+- **Unique Resume Uploads**: Allow applicants to upload a unique resume for different job applications.
+- **Advanced Filter & Sorting**: Our revamped job sorting and filtering features allow you to easy organize job listings by affiliation, skills and skill matching percentage. The process of finding the perfect job for you becomes faster and more convienient!
+- **Email Service**: On getting selected/rejected to a job, the applicant will now get an email notification regarding their status.
+- **Skill Matching Percentage**: Before deciding on a job to apply, you can now take a look at the skill matching percentage to see how closely the job's required skills align with your abilities!
+
+
+# Features from Previous Version:
 
  - **New Screens Added!**
  - Branding, Colours and Typography
