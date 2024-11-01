@@ -18,6 +18,7 @@ import JobQuestionnaire from "./Pages/CreateJob/jobQuestionnaire";
 import JobPreview from "./Pages/CreateJob/jobPreview";
 import Resume from "./Pages/Resume/Resume";
 import ResumeViewer from "./components/Resume/ResumeViewer";
+import ResumeManagerViewer from "./components/Resume/ResumeManagerViewer";
 import Notifications from "./Pages/Notifications/Notifications";
 
 const App = () => {
@@ -80,11 +81,10 @@ const App = () => {
               </ProtectedRoute>
             }
           />
+          <Route path="/resumeviewer/:applicantId" element={<ResumeViewer />} />
           <Route
-            path="/resumeviewer/:applicantId"
-            element={
-                <ResumeViewer />
-            }
+            path="/resumemanagerviewer/:id"
+            element={<ResumeManagerViewer />}
           />
           <Route
             path="/resume"

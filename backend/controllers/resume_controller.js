@@ -14,7 +14,7 @@ const upload = multer({
     cb(undefined, true);
   },
 });
-
+q;
 // Resume upload handler
 exports.uploadResume = async (req, res) => {
   // first look for a resume with the same applicantId
@@ -57,6 +57,28 @@ exports.uploadResume = async (req, res) => {
 exports.getResume = async (req, res) => {
   try {
     const resume = await Resume.findOne({ applicantId: req.params.id });
+    if (!resume) {
+      return res.status(404).send({ error: "Resume not found" });
+    }
+    res.set("Content-Type", "application/pdf");
+    // send file name
+    res.set("Content-Disposition", `inline; filename=${resume.fileName}`);
+    res.send(resume.fileData);
+  } catch (error) {
+    res.status(400).send({ error: error.message });
+  }
+};
+
+// Make sure to export the multer upload as well
+exports.upload = upload;
+
+exports.ping = (req, res) => {
+  res.send({ message: "Pong" });
+};
+
+exports.getResumeById = async (req, res) => {
+  try {
+    const resume = await Resume.findOne({ _id: req.params.id });
     if (!resume) {
       return res.status(404).send({ error: "Resume not found" });
     }

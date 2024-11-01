@@ -33,6 +33,7 @@ router.post(
 
 // router.get("/applications/:applicationId/resume", resumeController.getResume);
 router.get("/applicantresume/:id", resumeController.getResume);
+router.get("/resume/:id", resumeController.getResumeById);
 
 router.get("/sign-out", usersController.destroySession);
 
