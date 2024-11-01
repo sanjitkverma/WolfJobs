@@ -51,6 +51,7 @@ const Explore = () => {
   const [filterLocation, setFilterLocation] = useState("");
   const [filterMinSalary, setFilterMinSalary] = useState("");
   const [filterMaxSalary, setFilterMaxSalary] = useState("");
+  const [filterEmploymentType, setFilterEmploymentType] = useState("");
   const [showFilterDropdown, setShowFilterDropdown] = useState(false);
 
   const handleSearchChange = (event: any) => {
@@ -176,11 +177,17 @@ const Explore = () => {
 
     }
 
+    if (filterEmploymentType !== "") {
+
+      updatedList = updatedList.filter((job) => job.type === filterEmploymentType);
+
+    }
+
     updatedList = updatedList.filter(job => showOpenJobs ? job.status === "open" : job.status === "closed");
 
     setFilteredJobList(updatedList);
   }, [searchTerm, jobList, sortHighestPay, sortAlphabeticallyByCity, sortByEmploymentType, showOpenJobs, filterLocation, filterMinSalary,
-    filterMaxSalary]);
+    filterMaxSalary, filterEmploymentType]);
 
   return (
     <>
@@ -287,7 +294,42 @@ const Explore = () => {
                     />
 
                   </div>
+                  <div className="mb-2">
 
+                    <label htmlFor="employmentType">Employment Type:</label>
+
+                    <select
+
+                      id="employmentType" // This id must match the htmlFor above
+
+                      value={filterEmploymentType}
+
+                      onChange={(e) => setFilterEmploymentType(e.target.value)}
+
+                      className="w-full p-2 border"
+
+                    >
+
+                      <option value="">Select Type</option>
+
+                      <option value="full-time">Full-Time</option>
+
+                      <option value="part-time">Part-Time</option>
+
+                    </select>
+
+                  </div>
+                  <button
+
+                    onClick={() => setShowFilterDropdown(false)}
+
+                    className="p-2 bg-blue-500 text-white w-full"
+
+                  >
+
+                    Apply Filters
+
+                  </button>
                 </div>
 
               )}
