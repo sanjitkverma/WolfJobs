@@ -167,8 +167,8 @@ const JobDetail = (props: any) => {
                 <span className="font-semibold text-lg">Required Skills:</span>&nbsp;
                 <span className="text-black">
                   {Array.isArray(jobData.requiredSkills) && jobData.requiredSkills.length > 0
-                  ? jobData.requiredSkills.join(", ")
-                  : "No skills required"}
+                    ? jobData.requiredSkills.join(", ")
+                    : "No skills required"}
                 </span>
               </div>
               <div>
@@ -347,6 +347,7 @@ const JobDetail = (props: any) => {
               style={{
                 background: "#FF5353",
                 borderRadius: "10px",
+                marginLeft: "15px",
                 textTransform: "none",
                 fontSize: "18px",
                 width: "250px",
