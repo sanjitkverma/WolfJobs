@@ -30,6 +30,9 @@ router.post("/closejob", jsonParser, usersApi.closeJob);
 router.post("/createapplication", jsonParser, usersApi.createApplication);
 router.get("/skills", (req, res) => {
     try {
+        if (!required_skills.skills) {
+            throw new Error('Skills data is undefined');
+        }
         res.json(required_skills.skills);
     } catch (error) {
         console.error('Error fetching skills:', error);

@@ -4,7 +4,8 @@ let server = require('../index');
 const sinon = require('sinon');
 const emailService = require('../models/email');
 const Application = require('../models/application');
-const User = require('../models/user')
+const User = require('../models/user');
+const required_skills = require('../skills/required_skills');
 
 chai.should();
 
@@ -376,4 +377,57 @@ describe("Email Service Feature", () => {
         emailServiceStub.restore();
     });
     
+});
+
+//write test cases for fetching the skills API
+describe('Skills API', () => {
+
+    let skills;
+
+    // Save original skills so we can restore it after the test
+    before(() => {
+        skills = required_skills.skills;
+    });
+
+    after(() => {
+        // Restore original skills
+        required_skills.skills = skills;
+    });
+
+    describe("GET /api/v1/users/skills", () => {
+
+        it("IT SHOULD RETURN ALL REQUIRED SKILLS", (done) => {
+            chai.request('http://localhost:8000')
+                .get("/api/v1/users/skills")
+                .end((err, response) => {
+                    response.should.have.status(200);
+
+                    // Test response structure
+                    response.body.should.be.a('array');
+                    response.body.length.should.be.above(0);
+                    console.log('Skills:', response.body);
+
+                    done();
+                });
+        });
+
+        it("IT SHOULD RETURN INTERNAL SERVER ERROR IF SKILLS IS UNDEFINED", (done) => {
+
+            //intentionally let the skills dataset be undefined for the sake of the test case
+            required_skills.skills = undefined;
+
+            chai.request('http://localhost:8000')
+                .get("/api/v1/users/skills")
+                .end((err, response) => {
+                    response.should.have.status(500);
+
+                    // Check error message
+                    response.body.message.should.equal('Internal Server Error');
+
+                    //restore the skills
+                    required_skills.skills = skills;
+                    done();
+                });
+        });
+    });
 });
