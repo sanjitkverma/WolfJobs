@@ -52,7 +52,7 @@
 
 # Presentation Video
 
-[![Watch the video](https://github.com/deepr41/WolfJobs/blob/master/GIFs/Video%20Thumbnail.jpg)](http://www.youtube.com/watch?v=kMgLUrDiYEw)
+[![Watch the video](https://github.com/hsalway1/WolfJobs/blob/master/GIFs/Thumbail.png)](https://www.youtube.com/watch?v=EdFIcG3eckE)
 
 # About Us
 
