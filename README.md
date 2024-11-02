@@ -125,21 +125,21 @@ Applicants may upload a different resume for each job that they apply to
 
 # Future Improvements✨
 
-**1. Email Service📧** - On getting selected/rejected to a job, the applicant should be getting an email about it.
+**1. Interview Video Submission** - Managers can request applicants to submit a video screening file and applicants can upload a video on their side of the portal.
 
-**2. Interview Video Submission** - Managers can request applicants to submit a video screening file and applicants can upload a video on their side of the portal.
+**2. Job Analysis🔍** – WolfJobs will provide the functionality of analysing various aspects of a job. Job Analysis based on various parameters using graphical representation will help in making prediction on which jobs are more preferred and for which jobs applicants have more inclination. Hiring managers can then decide what rewards and salary to be given to the applicants of that job. Even applicants will get to know, which job is being preferred among other applicants.
 
-**3. Job Analysis🔍** – WolfJobs will provide the functionality of analysing various aspects of a job. Job Analysis based on various parameters using graphical representation will help in making prediction on which jobs are more preferred and for which jobs applicants have more inclination. Hiring managers can then decide what rewards and salary to be given to the applicants of that job. Even applicants will get to know, which job is being preferred among other applicants.
+**3. Chatbot Integration🤖** – Our platform WolfJobs will also provide the functionality of Chatbot integrated with our website so that user can easily interact with the bot and get to know about various features of our web application and have a nice interactive experience.
 
-**4. Chatbot Integration🤖** – Our platform WolfJobs will also provide the functionality of Chatbot integrated with our website so that user can easily interact with the bot and get to know about various features of our web application and have a nice interactive experience.
+**4. Interview Appointment Scheduling📆** – WolfJobs will also provide the facility for the hiring manager to organize an interview appointment for the job based on applicant’s availability and convenient time uploaded by the hiring manager. Either of the users can upload their availability time in the G-sheet and using google calendar appointments can be organised.
 
-**5. Interview Appointment Scheduling📆** – WolfJobs will also provide the facility for the hiring manager to organize an interview appointment for the job based on applicant’s availability and convenient time uploaded by the hiring manager. Either of the users can upload their availability time in the G-sheet and using google calendar appointments can be organised.
+**5. Matching based on Resume** – WolfJobs applicants will be able to parse their resume and WolfJobs will extract key skills from the resume and compare it with required job skills to give candidates job matching status.
 
-**6. Candidate Matching Percentage** – WolfJobs applicant skill matching feature will include a percentage to how fit a candidate's skills are based on the job's required skills. Applicants will see a match percentage indicating how likely they are to get accepted and recieve an interview. 
+**6. Database Security and Hashing** – WolfJobs currently does not securely store the password and user information in the database. This data needs to be protected and hashed to ensure security.
 
-**7. Matching based on Resume** – WolfJobs applicants will be able to parse their resume and WolfJobs will extract key skills from the resume and compare it with required job skills to give candidates job matching status.
+**7. Wishlist**- Integrate a “wishlist” feature which allow applicants save job listings for later review.
 
-**8. Database Security and Hashing** – WolfJobs currently does not securely store the password and user information in the database. This data needs to be protected and hashed to ensure security.
+**8. Sort by distance** - Allow sorting job listings based on distance, view job locations on an interactive map, and apply a distance filter to limit results to their preferred commuting range.
 
 
 # Contributors
@@ -166,5 +166,14 @@ Applicants may upload a different resume for each job that they apply to
 
 
    
+  </tr>
+</table>
+
+## Iteration 3:
+ <table>
+  <tr>
+    <td align="center"><a href="https://github.com/vuvuong003"><img src="https://avatars.githubusercontent.com/vuvuong003" width="100px;" alt=""/><br /><b>Vu Vuong</b></a></td>
+    <td align="center"><a href="https://github.com/Rohan0212"><img src="https://avatars.githubusercontent.com/Rohan0212" width="100px;" alt=""/><br /><b>Rohan Khandare</b></a><br /></td>
+    <td align="center"><a href="https://github.com/hsalway1"><img src="https://avatars.githubusercontent.com/hsalway1" width="100px;" alt=""/><br /><b>Hrishikesh Salway</b></a><br /></td>
   </tr>
 </table>
