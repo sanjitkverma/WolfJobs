@@ -37,20 +37,18 @@
 - **Email Service**: On getting selected/rejected to a job, the applicant will now get an email notification regarding their status.
 - **Skill Matching Percentage**: Before deciding on a job to apply, you can now take a look at the skill matching percentage to see how closely the job's required skills align with your abilities!
 
-
 # Features from Previous Version:
 
- - **New Screens Added!**
- - Branding, Colours and Typography
- - Components & States
- - Mutliple UI Screens _flows_ for Student & Manager Roles
- - [https://www.figma.com/file/sqt0gh5H7bZEkryKZ9jFnK/WolfJobs](https://www.figma.com/file/sqt0gh5H7bZEkryKZ9jFnK/WolfJobs)
+- **New Screens Added!**
+- Branding, Colours and Typography
+- Components & States
+- Mutliple UI Screens _flows_ for Student & Manager Roles
+- [https://www.figma.com/file/sqt0gh5H7bZEkryKZ9jFnK/WolfJobs](https://www.figma.com/file/sqt0gh5H7bZEkryKZ9jFnK/WolfJobs)
 
- - Seamless Resume Upload and Parsing: We've made it a breeze for applicants to submit their resumes for each job posting, while employers can effortlessly access and view the stored PDFs in MongoDB.
- - Precision Application Matching: Say goodbye to the uncertainty of job applications! With our enhanced system, applicants now have the power to identify which jobs align perfectly with their skills and qualifications. WolfJobs will analyze your profile and inform you if you're a strong fit for a position.
- - Revamped Job Sorting and Search:  Our revamped job sorting and search features allows you to easily organize opportunities by pay, city, and employment type. Plus, you can perform specific job searches to find the perfect match.
-- Stay Informed with the Notifications Tab: Introduced our brand-new Notifications tab to WolfJobs. Now, you can receive timely updates on the status of your applications, ensuring you're always in the know about your job prospects. 
-
+- Seamless Resume Upload and Parsing: We've made it a breeze for applicants to submit their resumes for each job posting, while employers can effortlessly access and view the stored PDFs in MongoDB.
+- Precision Application Matching: Say goodbye to the uncertainty of job applications! With our enhanced system, applicants now have the power to identify which jobs align perfectly with their skills and qualifications. WolfJobs will analyze your profile and inform you if you're a strong fit for a position.
+- Revamped Job Sorting and Search: Our revamped job sorting and search features allows you to easily organize opportunities by pay, city, and employment type. Plus, you can perform specific job searches to find the perfect match.
+- Stay Informed with the Notifications Tab: Introduced our brand-new Notifications tab to WolfJobs. Now, you can receive timely updates on the status of your applications, ensuring you're always in the know about your job prospects.
 
 # Presentation Video
 
@@ -74,54 +72,65 @@ At WolfJobs, it’s not just about work – it's about joining a vibrant pack wh
 
 - **Inclusivity & Belonging:** At WolfJobs, every student is a valuable asset. Our emphasis on inclusion ensures that you're not just taking up a job; you're becoming a part of a diverse, dynamic community where your voice matters.
 
+[![Watch the video](https://github.com/hsalway/WolfJobs/blob/master/GIFs/Video%20Thumbnail.png)](https://youtu.be/GGMzBGfx_0E)
+
 # Application Preview With New Features:
 
 ## Applicant Login
+
 Applicants will be able to select the skills that they have from the skills database.
 
 ![Applicant Login](https://github.com/hsalway1/WolfJobs/blob/dev/images/applicant_login.png)
 
 ## Manager Creates a Job
+
 Managers will also be able to select the skills required for the job from the skills database.
 
 ![Create Job](https://github.com/hsalway1/WolfJobs/blob/dev/images/create_job.png)
 
 ## Skill Matching Percentage
+
 Applicants are able to view the percentage of how closely the job's required skills align with their skills
 
 ![Skill Percentage](https://github.com/hsalway1/WolfJobs/blob/dev/images/sort_skill_percentage.png)
 
-
 ## Filtering & Sorting
+
 ### Filter by Affiliation
+
 Users can filter job listings based on the affiliation
 
 ![Filter by Affiliation](https://github.com/hsalway1/WolfJobs/blob/dev/images/filter_affiliation.png)
 
 ### Filter by Skills
+
 Users can filter job listings based on the skills required. In this example, only one job shows up because it's be filtered by "leadership"
 
 ![Filter by Skills](https://github.com/hsalway1/WolfJobs/blob/dev/images/filter_skills.png)
 
 ### Sort by Skill Matching Percentage
+
 Applicants can sort job listings based on the percentage of how closely the job's required skills align with their skills
 
 ![Sort Skill Percentage](https://github.com/hsalway1/WolfJobs/blob/dev/images/sort_skill_percentage.png)
 
 ## Support for Multiple Applicants Per Job
+
 Multiple applicants may apply for the same job
 
 ![Multiple Applicants](https://github.com/hsalway1/WolfJobs/blob/dev/images/mutiple_applicants.png)
 
 ## Support for Unique Resumes
+
 Applicants may upload a different resume for each job that they apply to
 
 ### Resume 1
+
 ![Unique Resume 1](https://github.com/hsalway1/WolfJobs/blob/dev/images/resume1.png)
 
 ### Resume 2
-![Unique Resume 2](https://github.com/hsalway1/WolfJobs/blob/dev/images/resume2.png)
 
+![Unique Resume 2](https://github.com/hsalway1/WolfJobs/blob/dev/images/resume2.png)
 
 # Future Improvements✨
 
@@ -141,7 +150,6 @@ Applicants may upload a different resume for each job that they apply to
 
 **8. Sort by distance** - Allow sorting job listings based on distance, view job locations on an interactive map, and apply a distance filter to limit results to their preferred commuting range.
 
-
 # Contributors
 
   <table>
@@ -151,12 +159,11 @@ Applicants may upload a different resume for each job that they apply to
     <td align="center"><a href="https://github.com/Janhavi-23"><img src="https://avatars.githubusercontent.com/Janhavi-23" width="100px;" alt=""/><br /><b>Janhavi Pendse</b></a><br /></td>
     <td align="center"><a href="https://github.com/deepp2905"><img src="https://avatars.githubusercontent.com/deepp2905" width="100px;" alt=""/><br /><b>Deep Patel</b></a><br /></td>
 
-
-   
   </tr>
 </table>
 
 ## Iteration 2:
+
  <table>
   <tr>
     <td align="center"><a href="https://github.com/sanjitkverma"><img src="https://avatars.githubusercontent.com/sanjitkverma" width="100px;" alt=""/><br /><b>Sanjit Verma</b></a></td>
@@ -164,12 +171,11 @@ Applicants may upload a different resume for each job that they apply to
     <td align="center"><a href="https://github.com/Harris-A-Khan"><img src="https://avatars.githubusercontent.com/Harris-A-Khan" width="100px;" alt=""/><br /><b>Harris Khan </b></a><br /></td>
     <td align="center"><a href="https://github.com/Sarvesh-Somasundaram"><img src="https://avatars.githubusercontent.com/Sarvesh-Somasundaram" width="100px;" alt=""/><br /><b>Sarvesh Somasundaram</b></a><br /></td>
 
-
-   
   </tr>
 </table>
 
 ## Iteration 3:
+
  <table>
   <tr>
     <td align="center"><a href="https://github.com/vuvuong003"><img src="https://avatars.githubusercontent.com/vuvuong003" width="100px;" alt=""/><br /><b>Vu Vuong</b></a></td>
