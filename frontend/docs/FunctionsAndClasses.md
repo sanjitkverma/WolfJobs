@@ -179,3 +179,37 @@ resume.fileName,
 application/pdf,
 },
 success: true
+
+## 2. Email Service (/backend/models/email.js)
+#### I. Function sendEmail
+
+Parameters:
+- applicantemail (String): The email address of the applicant to receive the notification
+- subject (String): the subject line of the email
+- html (String): the HTML content of the email body
+
+#### Method: "POST"
+
+#### Description:
+
+Sends an email notification to an applicant regarding their job application status. This function uses the nodemailer package to send emails through a Gmail account, with authentication details retrieved from environment variables.
+
+#### Ouput
+- Success: Console logs "Email sent successfully!" if the email is sent without issues.
+- Error: Console logs an error message if the email fails to send.
+
+
+## 3. Skill Matching Feature (/frontend/src/components/JobListTile.tsx)
+### I. Function getMatchStatus
+
+#### Parameters
+- job (Object): A job object with a list of required skills (job.requiredSkills)
+
+#### Meethod: "GET"
+
+#### Description:
+This function calculates the match percentage between a job's required skills and an applicant's skills. It retrieves the user's skills from the state using useUserStore. The function compares the required skills for the job with the applicant's skills, calculating the percentage of matching skills. If no skills match, the percentage is set to 0% Match, with a red background.
+For matches below 75%, the percentage is displayed with a yellow background. For matches at or above 75%, the percentage is displayed with a green background.
+
+#### Output:
+Return an object representing the match status with a string displaying the match percentage and object defining the background and text color for match display.
