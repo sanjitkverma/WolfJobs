@@ -9,11 +9,14 @@ import JobsListView from "../../components/Job/JobListView";
 import JobDetailView from "../../components/Job/JobDetailView";
 import { useJobStore } from "../../store/JobStore";
 import { useApplicationStore } from "../../store/ApplicationStore";
-// const userId = useUserStore((state) => state.id);
+
+import { Select, MenuItem, SelectChangeEvent, InputLabel, FormControl, Autocomplete, TextField, Box } from "@mui/material"
 
 const Explore = () => {
   const naviagte = useNavigate();
 
+  const userSkills = useUserStore((state) => state.skills);
+  const userRole = useUserStore((state) => state.role);
   const updateName = useUserStore((state) => state.updateName);
   const updateAddress = useUserStore((state) => state.updateAddress);
   const updateRole = useUserStore((state) => state.updateRole);
@@ -28,19 +31,16 @@ const Explore = () => {
   const updateResume = useUserStore((state) => state.updateResume)
   const updateResumeId = useUserStore((state) => state.updateResumeId);
 
+  const [affiliation, setAffiliation] = useState("");
 
   const updateApplicationList = useApplicationStore(
     (state) => state.updateApplicationList
   );
-  // const userId = useUserStore((state) => state.id);
-
-  // const [displayList, setDisplayList] = useState<Job[]>([]);
 
   const updateEmail = useUserStore((state) => state.updateEmail);
 
   const updateJobList = useJobStore((state) => state.updateJobList);
   const jobList: Job[] = useJobStore((state) => state.jobList);
-  // const applicationList = useApplicationStore((state) => state.applicationList);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredJobList, setFilteredJobList] = useState<Job[]>([]);
@@ -48,6 +48,9 @@ const Explore = () => {
   const [sortAlphabeticallyByCity, setSortAlphabeticallyByCity] = useState(false);
   const [sortByEmploymentType, setSortByEmploymentType] = useState(false);
   const [showOpenJobs, setShowOpenJobs] = useState(true);  // true for open jobs, false for closed jobs
+  const [sortByScore, setSortByScore] = useState(false);
+  const [skills, setSkills] = useState<string[]>([]);
+  const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
 
   const handleSearchChange = (event: any) => {
     setSearchTerm(event.target.value);
@@ -68,6 +71,10 @@ const Explore = () => {
   const toggleJobStatus = () => {
     setShowOpenJobs(!showOpenJobs);
   };
+
+  const handleSortByScore = () => {
+    setSortByScore(!sortByScore);
+  }
 
   useEffect(() => {
     const token: string = localStorage.getItem("token")!;
@@ -146,10 +153,61 @@ const Explore = () => {
       });
     }
 
+    if (affiliation !== "") {
+      updatedList = [...updatedList].filter((job) => job.managerAffilication === affiliation)
+    }
+
+    if (selectedSkills.length) {
+      updatedList = [...updatedList].filter((job) => {
+        for (let i = 0; i < selectedSkills.length; i++) {
+          if (job.requiredSkills.includes(selectedSkills[i])) {
+            return true;
+          }
+        }
+        return false;
+      })
+    }
+
     updatedList = updatedList.filter(job => showOpenJobs ? job.status === "open" : job.status === "closed");
 
+    if (sortByScore) {
+      updatedList = [...updatedList].sort((a, b) => {
+        const requiredSkillsA = a.requiredSkills;
+        const requiredSkillsB = b.requiredSkills;
+
+        return userSkills.filter((skill) => requiredSkillsB.includes(skill)).length / requiredSkillsB.length -
+          userSkills.filter((skill) => requiredSkillsA.includes(skill)).length / requiredSkillsA.length
+      })
+    }
+
     setFilteredJobList(updatedList);
-  }, [searchTerm, jobList, sortHighestPay, sortAlphabeticallyByCity, sortByEmploymentType, showOpenJobs]);
+  }, [searchTerm, jobList, sortHighestPay, sortAlphabeticallyByCity, sortByEmploymentType, showOpenJobs, affiliation, selectedSkills, sortByScore]);
+
+  // fetch skills from backend
+  useEffect(() => {
+    axios.get("http://localhost:8000/api/v1/users/skills").then(
+      (res) => {
+        if (res.status != 200) {
+          toast.error("Error fetching skills");
+          return;
+        }
+
+        setSkills(res.data as string[]);
+      }
+    )
+  }, []);
+
+  const handleClearFilter = () => {
+    setSearchTerm("");
+    setAffiliation("");
+    setShowOpenJobs(true);
+    setSortAlphabeticallyByCity(false);
+    setSortHighestPay(false);
+    setSortAlphabeticallyByCity(false);
+    setSortByScore(false);
+    setSortByEmploymentType(false);
+    setSelectedSkills([]);
+  };
 
   return (
     <>
@@ -165,25 +223,73 @@ const Explore = () => {
             />
           </div>
           <div>
-            <button onClick={handleSortChange} className="p-2 ml-2 border">
-              {sortHighestPay ? "Sort by High Pay : On" : "Sort by Highest Pay : Off"}
-            </button>
-            <button onClick={handleSortCityChange} className="p-2 ml-2 border">
-              {sortAlphabeticallyByCity ? "Sort by City : On" : "Sort by City : Off"}
-            </button>
-            <button onClick={handleSortEmploymenyTypeChange} className="p-2 ml-2 border">
-              {sortByEmploymentType ? "Sort by Employment Type : On" : "Sort by Employment Type : Off"}
-            </button>
-            <button onClick={toggleJobStatus} className="p-2 ml-2 border">
-              {showOpenJobs ? "Show Closed Jobs" : "Show Open Jobs"}
-            </button>
+            <Box display="flex" alignItems="center" gap={2} width="100%">
+              <button onClick={handleSortChange} className="p-2 ml-2 border">
+                {sortHighestPay ? "Sort by High Pay : On" : "Sort by Highest Pay : Off"}
+              </button>
+              <button onClick={handleSortCityChange} className="p-2 ml-2 border">
+                {sortAlphabeticallyByCity ? "Sort by City : On" : "Sort by City : Off"}
+              </button>
+              <button onClick={handleSortEmploymenyTypeChange} className="p-2 ml-2 border">
+                {sortByEmploymentType ? "Sort by Employment Type : On" : "Sort by Employment Type : Off"}
+              </button>
+              <button onClick={toggleJobStatus} className="p-2 ml-2 mr-2 border">
+                {showOpenJobs ? "Show Closed Jobs" : "Show Open Jobs"}
+              </button>
+
+              {
+                // score filter only visible for applicants
+                userRole === "Applicant" &&
+                <button onClick={handleSortByScore} className="p-2 ml-2 mr-2 border">
+                  {sortByScore ? "Sort By Score: On" : "Sort By Score: Off"}
+                </button>
+              }
+
+              <FormControl className="border" style={{ minWidth: 200 }}>
+                <InputLabel id="affiliation-id">Select Affiliation</InputLabel>
+                <Select
+                  value={affiliation}
+                  labelId="affiliation-id"
+                  label="Role"
+                  id="role"
+                  onChange={(e: SelectChangeEvent) => {
+                    setAffiliation(e.target.value);
+                  }}
+                >
+                  <MenuItem value="" selected disabled>
+                    Select Affiliation
+                  </MenuItem>
+                  <MenuItem value={"nc-state-dining"}>
+                    NC State Dining
+                  </MenuItem>
+                  <MenuItem value={"campus-enterprises"}>
+                    Campus Enterprises
+                  </MenuItem>
+                  <MenuItem value={"wolfpack-outfitters"}>
+                    Wolfpack Outfitters
+                  </MenuItem>
+                </Select>
+              </FormControl>
+              <Autocomplete
+                multiple
+                options={skills}
+                value={selectedSkills}
+                onChange={(_, newValue) => setSelectedSkills(newValue)}
+                renderInput={(params) => (
+                  <TextField {...params} placeholder="Select Skills" variant="outlined" />
+                )}
+                style={{ minWidth: 200 }}
+                className="border rounded p-2 ml-2"
+              />
+              <button className="bg-red-500 text-white px-4 py-2 rounded p-2 ml-2 border" onClick={handleClearFilter}>Reset</button>
+            </Box>
           </div>
         </div>
         <div className="flex flex-row" style={{ height: "calc(100vh - 72px)" }}>
           <JobsListView jobsList={filteredJobList} />
           <JobDetailView />
         </div>
-      </div>
+      </div >
     </>
   );
 };

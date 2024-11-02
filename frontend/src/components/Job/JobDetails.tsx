@@ -30,6 +30,7 @@ const JobDetail = (props: any) => {
   const applicantSkills = useUserStore((state) => state.skills);
   const applicantNumber = useUserStore((state) => state.phonenumber);
   const role = useUserStore((state) => state.role);
+  const resumeId = useUserStore((state) => state.resumeId);
 
   const [application, setApplication] = useState<Application | null>(null);
   const [showApply, setShowApply] = useState(false);
@@ -65,11 +66,12 @@ const JobDetail = (props: any) => {
       setShowApply(false);
     } else {
       const temp: Application | undefined = applicationList.find(
-        (item) => jobData._id === item.jobid
+        // check if the current signed in applicant has applied for the job
+        (item) => jobData._id === item.jobid && item.applicantid === userId
       );
       setShowApply(!temp || false);
     }
-  }, [jobData]);
+  }, [jobData, applicationList]);
 
   const form = useForm<FormValues>({
     defaultValues: {
@@ -81,29 +83,36 @@ const JobDetail = (props: any) => {
   });
   const { register, handleSubmit } = form;
 
-  const handleApplyJob = (e: any) => {
+  const handleApplyJob = async (e: any) => {
     e.preventDefault();
-    const body = {
-      applicantname,
-      applicantid: userId,
-      applicantemail,
-      applicantSkills,
-      phonenumber: applicantNumber,
-      managerid: jobData.managerid,
-      jobname: jobData.name,
-      jobid: jobData._id,
-    };
 
-    axios
-      .post("http://localhost:8000/api/v1/users/createapplication", body)
-      .then((res) => {
-        if (res.status !== 200) {
-          toast.error("Failed to apply");
-          return;
-        }
-        location.reload();
+    try {
+      const body = {
+        applicantname,
+        applicantid: userId,
+        applicantemail,
+        applicantSkills,
+        phonenumber: applicantNumber,
+        managerid: jobData.managerid,
+        jobname: jobData.name,
+        jobid: jobData._id,
+      };
+
+      const response = await axios.post(
+        "http://localhost:8000/api/v1/users/createapplication",
+        body
+      );
+
+      if (response.status === 200) {
         toast.success("Applied successfully");
-      });
+        location.reload();
+      } else {
+        toast.error("Failed to apply");
+      }
+    } catch (error) {
+      toast.error("Error applying for the job");
+      console.error("Apply Job Error:", error);
+    }
   };
 
   const handleAnswerQuestionnaire = (data: FormValues) => {
@@ -164,13 +173,18 @@ const JobDetail = (props: any) => {
                 {jobData.location}
               </div>
               <div>
-                <span className="font-semibold text-lg">Required Skills:</span>&nbsp;
-                {jobData.requiredSkills}
+                <span className="font-semibold text-lg">Required Skills:</span>
+                &nbsp;
+                <span className="text-black">
+                  {Array.isArray(jobData.requiredSkills) &&
+                  jobData.requiredSkills.length > 0
+                    ? jobData.requiredSkills.join(", ")
+                    : "No skills required"}
+                </span>
               </div>
               <div>
                 {userRole === "Applicant" &&
-                  (application?.status === "accepted" ||
-                  application?.status === "rejected" ? (
+                  (application?.status ? (
                     <>
                       <b>Application Status:</b>
                       <span className="capitalize">
@@ -344,6 +358,7 @@ const JobDetail = (props: any) => {
               style={{
                 background: "#FF5353",
                 borderRadius: "10px",
+                marginLeft: "15px",
                 textTransform: "none",
                 fontSize: "18px",
                 width: "250px",

@@ -11,26 +11,29 @@ const JobListTile = (props: any) => {
 
   const getMatchStatus = (job: Job) => {
     let matchStatus = {
-      text: "Low Match",
+      text: "0% Match",
       style: { backgroundColor: "#FF5757", color: "white" },
     };
 
     const skills = useUserStore((state) => state.skills);
     if (skills && job.requiredSkills) {
-      const applicantSkillsArray = skills
-        .split(",")
-        .map((skill) => skill.trim().toLowerCase());
-      const requiredSkillsArray = job.requiredSkills
-        .split(",")
-        .map((skill) => skill.trim().toLowerCase());
-      const isMatch = requiredSkillsArray.some((skill) =>
+      const applicantSkillsArray = skills.map((skill) => skill.toLowerCase());
+      const requiredSkillsArray = job.requiredSkills.map((skill) => skill.toLowerCase());
+      const matchingSkillsCount = requiredSkillsArray.filter((skill) =>
         applicantSkillsArray.includes(skill)
+      ).length;
+
+      const matchPercentage = Math.round(
+        (matchingSkillsCount / requiredSkillsArray.length) * 100
       );
 
-      if (isMatch) {
+      if (matchPercentage > 0) {
         matchStatus = {
-          text: "Match",
-          style: { backgroundColor: "#00E000", color: "white" },
+          text: `${matchPercentage}% Match`,
+          style: { 
+            backgroundColor: matchPercentage >= 75 ? "#00E000" : "#FFBF00", // Green for high match, yellow for moderate
+            color: "white",
+          },
         };
       }
     }
@@ -106,9 +109,8 @@ const JobListTile = (props: any) => {
   return (
     <div className="my-3" onClick={handleClick}>
       <div
-        className={`p-3 bg-white rounded-xl shadow-sm ${
-          active ? "border-black" : "border-white"
-        } border`}
+        className={`p-3 bg-white rounded-xl shadow-sm ${active ? "border-black" : "border-white"
+          } border`}
       >
         <div className="flex flex-row">
           <div className="w-4/6">
@@ -140,9 +142,8 @@ const JobListTile = (props: any) => {
               <p className="text-base">
                 <b>Job Status:</b>
                 <span
-                  className={`${
-                    data.status === "closed" ? "text-[#FF5353]" : ""
-                  }`}
+                  className={`${data.status === "closed" ? "text-[#FF5353]" : ""
+                    }`}
                 >
                   &nbsp;<span className="capitalize">{data.status}</span>
                 </span>
@@ -153,9 +154,7 @@ const JobListTile = (props: any) => {
               </p>
               <p className="text-base">
                 {userRole === "Applicant" &&
-                  ((application !== null &&
-                    application?.status === "accepted") ||
-                  application?.status === "rejected" ? (
+                  (application != null && application?.status ? (
                     <span className="capitalize">
                       <b>Application Status:</b>&nbsp;{application?.status}
                     </span>

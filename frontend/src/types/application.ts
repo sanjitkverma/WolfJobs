@@ -5,7 +5,7 @@ type Application = {
   applicantid: string;
   applicantname: string;
   applicantemail: string;
-  applicantSkills: string;
+  applicantSkills: string[];
   phonenumber: string;
   manageremail: string;
   managerAffilication: string;
@@ -15,10 +15,11 @@ type Application = {
   dob: string;
   rating: string;
   gender: string;
-  skills: string;
+  skills: string[];
   status: string;
   answer1: string;
   answer2: string;
   answer3: string;
   answer4: string;
+  resumeId: string;
 };
