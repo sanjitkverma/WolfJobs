@@ -72,7 +72,7 @@ At WolfJobs, it’s not just about work – it's about joining a vibrant pack wh
 
 - **Inclusivity & Belonging:** At WolfJobs, every student is a valuable asset. Our emphasis on inclusion ensures that you're not just taking up a job; you're becoming a part of a diverse, dynamic community where your voice matters.
 
-[![Watch the video](https://github.com/hsalway1/WolfJobs/GIFs/Video%20Thumbnail.jpg)](https://youtu.be/GGMzBGfx_0E)
+[![Watch the video](https://github.com/hsalway1/WolfJobs/GIFs/VideoThumbnail.jpg)](https://youtu.be/GGMzBGfx_0E)
 
 # Application Preview With New Features:
 
