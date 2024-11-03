@@ -6,7 +6,9 @@
   "scripts": {
     "start": "nodemon index.js",
     "test": "mocha --recursive --exit",
-    "jesttest": "jest"
+    "jesttest": "jest",
+    "lint": "eslint 'src/**/*.{ts,js}'",
+    "format": "prettier --write 'src/**/*.{ts,js}'"
   },
   "keywords": [
     "Calorie",

@@ -1,16 +1,16 @@
 export function getFormBody(params: any) {
-  let formBody: string[] = [];
+  const formBody: string[] = [];
 
-  for (let property in params) {
-    let encodedKey = encodeURIComponent(property);
+  for (const property in params) {
+    const encodedKey = encodeURIComponent(property);
     if (Array.isArray(params[property])) {
       params[property].forEach((value) => {
-        let encodedValue = encodeURIComponent(value);
+        const encodedValue = encodeURIComponent(value);
         formBody.push(`${encodedKey}=${encodedValue}`);
       });
     } else {
       // Handle other properties as usual
-      let encodedValue = encodeURIComponent(params[property]);
+      const encodedValue = encodeURIComponent(params[property]);
       formBody.push(`${encodedKey}=${encodedValue}`);
     }
   }
