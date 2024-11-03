@@ -33,7 +33,7 @@ const JobPreview = () => {
   const navigate = useNavigate();
   const userId = useUserStore((state) => state.id);
 
-  const onSubmit = (e: any) => {
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const url = `http://localhost:8000/api/v1/users/createjob`;
@@ -63,46 +63,51 @@ const JobPreview = () => {
     });
   };
 
+  const handleButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault(); // Prevent default button behavior
+    onSubmit(e as unknown as React.FormEvent<HTMLFormElement>); // Call onSubmit with a fake form event
+  };
+
   useEffect(() => {
     console.log(state);
-  }, []);
+  });
 
   return (
     <>
       <div className="flex flex-row">
         <div
-          className="w-3/12  pt-10 border-r"
+          className="w-3/12 pt-10 border-r"
           style={{ height: "calc(100vh - 72px)" }}
         >
-          <div className="text-2xl  translate-x-10">Create New Job Listing</div>
-          <div className="flex flex-col items-start  ml-10  mt-10 ">
-            <div className="inline-flex items-center flex-row  ">
+          <div className="text-2xl translate-x-10">Create New Job Listing</div>
+          <div className="flex flex-col items-start ml-10 mt-10">
+            <div className="inline-flex items-center flex-row">
               <AiFillCheckCircle color="#1E1E1E" size="20px" />
               <span className="ml-2 text-xl text-[#1E1E1E]">Add details</span>
             </div>
-            <div className="inline-flex items-center flex-row  ">
+            <div className="inline-flex items-center flex-row">
               <AiFillCheckCircle color="#1E1E1E" size="20px" />
               <span className="ml-2 text-xl text-[#1E1E1E]">
                 Fill Questionnaire
               </span>
             </div>
-            <div className="inline-flex items-center flex-row  ">
+            <div className="inline-flex items-center flex-row">
               <AiFillCheckCircle color="#1E1E1E" size="20px" />
               <span className="ml-2 text-xl text-[#1E1E1E]">Preview</span>
             </div>
-            <div className="inline-flex items-center flex-row  ">
+            <div className="inline-flex items-center flex-row">
               <AiFillCheckCircle color="#CBCBCB" size="20px" />
               <span className="ml-2 text-xl text-[#CBCBCB]">Confirm</span>
             </div>
           </div>
         </div>
         <div className="w-6/12">
-          <div className="flex flex-col m-10 ">
+          <div className="flex flex-col m-10">
             <div className="text-xl border-b border-gray-300 font-bold">
               Job Details
             </div>
             <div className="flex flex-row justify-between m-2">
-              <div className="flex flex-col ">
+              <div className="flex flex-col">
                 <div>
                   <span className="font-semibold text-lg">Role:</span>&nbsp;
                   {details["role"]}
@@ -141,7 +146,7 @@ const JobPreview = () => {
             <div className="text-lg border-b border-gray-300 mb-2 font-bold">
               Required Skills
             </div>
-            <span className="text-[#686868">{details.requiredSkills.join(", ")}</span>
+            <span className="text-[#686868]">{details.requiredSkills.join(", ")}</span>
 
             <div className="text-lg border-b border-gray-300 mb-2 font-bold">
               Questions
@@ -158,9 +163,9 @@ const JobPreview = () => {
             <div className="text-[#686868] mx-2">
               4: {questions["question4"]}
             </div>
-            <div className="mt-4 ">
+            <div className="mt-4">
               <Button
-                onClick={onSubmit}
+                onClick={handleButtonClick}
                 type="submit"
                 variant="contained"
                 color="primary"

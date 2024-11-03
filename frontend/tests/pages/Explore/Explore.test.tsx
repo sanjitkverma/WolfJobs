@@ -1,4 +1,3 @@
-import { render, screen } from '@testing-library/react';
 import Explore from "../../../src/Pages/Explore/Explore";
 import { MemoryRouter } from "react-router";
 import axios from "axios";

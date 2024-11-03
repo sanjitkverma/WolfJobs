@@ -11,8 +11,6 @@ const Resume: React.FC = () => {
   // The current resume data
   const resumeName = useUserStore((state) => state.resume);
   const userId = useUserStore((state) => state.id);
-  const updateResume = useUserStore((state) => state.updateResume);
-  const updateResumeId = useUserStore((state) => state.updateResumeId) 
 
   const handleSubmit = async () => {
     if (file) {

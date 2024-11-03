@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
-import { useUserStore } from '../../store/UserStore';
 import { useJobStore } from '../../store/JobStore';
 import { useApplicationStore } from '../../store/ApplicationStore';
 import JobListTile from '../../components/Job/JobListTile';
@@ -16,8 +15,8 @@ const Notifications = () => {
   const updateApplicationList = useApplicationStore((state) => state.updateApplicationList);
   const applicationList = useApplicationStore((state) => state.applicationList);
 
-  const [acceptedJobs, setAcceptedJobs] = useState([]);
-  const [rejectedJobs, setRejectedJobs] = useState([]);
+  const [acceptedJobs, setAcceptedJobs] = useState<Job[]>([]);
+  const [rejectedJobs, setRejectedJobs] = useState<Job[]>([]);
   const [isAcceptedVisible, setIsAcceptedVisible] = useState(true);
   const [isRejectedVisible, setIsRejectedVisible] = useState(true);
 
@@ -55,7 +54,7 @@ const Notifications = () => {
     setRejectedJobs(rejectedJobList);
   }, [applicationList, jobList]);
 
-  const handleJobClick = (jobId) => {
+  const handleJobClick = (jobId: String) => {
     navigate('/dashboard', { state: { selectedJobId: jobId } });
   };
 

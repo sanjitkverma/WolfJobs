@@ -30,7 +30,7 @@ const JobListTile = (props: any) => {
       if (matchPercentage > 0) {
         matchStatus = {
           text: `${matchPercentage}% Match`,
-          style: { 
+          style: {
             backgroundColor: matchPercentage >= 75 ? "#00E000" : "#FFBF00", // Green for high match, yellow for moderate
             color: "white",
           },

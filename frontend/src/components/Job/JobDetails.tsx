@@ -30,7 +30,6 @@ const JobDetail = (props: any) => {
   const applicantSkills = useUserStore((state) => state.skills);
   const applicantNumber = useUserStore((state) => state.phonenumber);
   const role = useUserStore((state) => state.role);
-  const resumeId = useUserStore((state) => state.resumeId);
 
   const [application, setApplication] = useState<Application | null>(null);
   const [showApply, setShowApply] = useState(false);
@@ -154,11 +153,10 @@ const JobDetail = (props: any) => {
                 <span className="font-semibold text-lg">Job Status:</span>
                 &nbsp;
                 <span
-                  className={`capitalize ${
-                    jobData.status === "open"
+                  className={`capitalize ${jobData.status === "open"
                       ? "text-green-500"
                       : "text-red-500"
-                  }`}
+                    }`}
                 >
                   {jobData.status}
                 </span>
@@ -177,7 +175,7 @@ const JobDetail = (props: any) => {
                 &nbsp;
                 <span className="text-black">
                   {Array.isArray(jobData.requiredSkills) &&
-                  jobData.requiredSkills.length > 0
+                    jobData.requiredSkills.length > 0
                     ? jobData.requiredSkills.join(", ")
                     : "No skills required"}
                 </span>

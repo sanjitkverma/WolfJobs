@@ -33,7 +33,7 @@ const LogoutPage = () => {
 
     navigate("/login");
     console.log("Logged out");
-  }, []);
+  });
 
   return <></>;
 };

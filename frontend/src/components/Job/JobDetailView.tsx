@@ -15,7 +15,7 @@ const JobDetailView = () => {
 
   useEffect(() => {
     const jobId = searchParams.get("jobId");
-    if (!!jobId) {
+    if (jobId) {
       setJobData(jobsList.find((item) => item._id === jobId));
     } else {
       setJobData(null);
