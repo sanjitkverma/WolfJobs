@@ -23,7 +23,7 @@ const LogoutPage = () => {
     updateAddress("");
     updateRole("");
     updateDob("");
-    updateSkills("");
+    updateSkills([]);
     updatePhonenumber("");
     updateId("");
     updateAvailability("");
@@ -33,7 +33,7 @@ const LogoutPage = () => {
 
     navigate("/login");
     console.log("Logged out");
-  }, []);
+  });
 
   return <></>;
 };

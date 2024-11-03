@@ -1,7 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { signup } from "../../deprecateded/auth";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { Autocomplete } from "@mui/material";
+
 import {
   Button,
   Stack,
@@ -18,13 +20,33 @@ type FormValues = {
   email: string;
   password: string;
   confirmPassword: string;
-  skills: string;
+  skills: string[];
 };
 
 const RegistrationPage = () => {
   const navigate = useNavigate();
   const [role, setRole] = useState("Applicant");
   const [affilation, setAffiliation] = useState("nc-state-dining");
+  const [skillsDB, setSkillsDB] = useState<string[]>([]); // For fetched skills
+
+  // Fetch skills from backend
+  useEffect(() => {
+    const fetchSkillsDB = async () => {
+      try {
+        const response = await fetch("http://localhost:8000/api/v1/users/skills");
+        if (!response.ok) {
+          throw new Error(`Error ${response.status}: ${response.statusText}`);
+        }
+        const data = await response.json();
+        console.log("Fetched skills:", data);
+        setSkillsDB(data);
+      } catch (error) {
+        console.error("Error fetching skills:", error);
+        setSkillsDB([]);
+      }
+    };
+    fetchSkillsDB();
+  }, []);
 
   const form = useForm<FormValues>({
     defaultValues: {
@@ -32,11 +54,11 @@ const RegistrationPage = () => {
       email: "",
       password: "",
       confirmPassword: "",
-      skills: "",
+      skills: [],
     },
   });
 
-  const { register, handleSubmit, formState, watch } = form;
+  const { register, handleSubmit, formState, watch, setValue } = form;
   const { errors } = formState;
 
   const onSubmit = (data: FormValues) => {
@@ -145,25 +167,27 @@ const RegistrationPage = () => {
                   },
                 }}
               />
-              <TextField
-                label="Skills"
-                type="text"
-                {...register("skills", {
-                  required: "Skills is required",
-                })}
-                error={!!errors.skills}
-                helperText={errors.skills?.message}
-                sx={{
-                  "& label": {
-                    paddingLeft: (theme) => theme.spacing(1),
-                  },
-                  "& input": { paddingLeft: (theme) => theme.spacing(2.5) },
-                  "& fieldset": {
-                    paddingLeft: (theme) => theme.spacing(1.5),
-                    borderRadius: "10px",
-                  },
-                }}
-              />
+              <Autocomplete
+              multiple
+              options={skillsDB}
+              onChange={(_, value) => setValue("skills", value)}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Skills"
+                  error={!!errors.skills}
+                  helperText={errors.skills?.message}
+                  sx={{
+                    "& label": { paddingLeft: (theme) => theme.spacing(1) },
+                    "& input": { paddingLeft: (theme) => theme.spacing(2.5) },
+                    "& fieldset": {
+                      paddingLeft: (theme) => theme.spacing(1.5),
+                      borderRadius: "10px",
+                    },
+                  }}
+                />
+              )}
+            />
               <FormControl>
                 <InputLabel id="role-id">Role</InputLabel>
                 <Select

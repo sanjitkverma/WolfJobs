@@ -7,11 +7,12 @@ import { useUserStore } from "../../store/UserStore";
 import { useJobStore } from "../../store/JobStore";
 import { useApplicationStore } from "../../store/ApplicationStore";
 import JobListTile from "../../components/Job/JobListTile";
-import { Button } from "@mui/material";
+import { Button, ListItem } from "@mui/material";
 
 const Dashboard = () => {
   const naviagte = useNavigate();
 
+  const userId = useUserStore((state) => state.id);
   const updateName = useUserStore((state) => state.updateName);
   const updateEmail = useUserStore((state) => state.updateEmail);
   const updatePassword = useUserStore((state) => state.updatePassword);
@@ -46,10 +47,10 @@ const Dashboard = () => {
 
   useEffect(() => {
     const token: string = localStorage.getItem("token")!;
-    if (!!!token) {
+    if (!token) {
       naviagte("/login");
     }
-    if (!!token) {
+    if (token) {
       const tokenInfo = token.split(".");
       const userInfo = JSON.parse(atob(tokenInfo[1]));
 
@@ -132,14 +133,20 @@ const Dashboard = () => {
                 } else {
                   const application = applicationList?.find(
                     (item) =>
-                      item.jobid === job._id && item.status === "screening"
+                      item.jobid === job._id && item.status === "screening" && item.applicantid === userId
                   );
+
                   action = application
                     ? "view-questionnaire"
                     : "view-application";
                 }
 
-                return <JobListTile data={job} key={job._id} action={action} />;
+                const currentUserApplication =
+                  applicationList?.find((item) => item.jobid === job._id && item.applicantid === userId);
+
+                // check if the current signed in user has applied for the job
+                return currentUserApplication && role === "Applicant" ? <JobListTile data={job} key={job._id} action={action} /> :
+                  (role === "Manager" ? <JobListTile data={job} key={job._id} action={action} /> : <></>);
               })}
             </div>
           </>

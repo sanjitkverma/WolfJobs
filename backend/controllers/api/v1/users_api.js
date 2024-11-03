@@ -1,12 +1,15 @@
 const User = require("../../../models/user");
+const Resume = require("../../../models/resume");
 const jwt = require("jsonwebtoken");
 const Food = require("../../../models/food");
 const History = require("../../../models/history");
 const Job = require("../../../models/job");
 const Application = require("../../../models/application");
 const AuthOtp = require("../../../models/authOtp");
+const email = require("../../../models/email");
 
 const nodemailer = require("nodemailer");
+const { application } = require("express");
 
 require("dotenv").config();
 
@@ -15,12 +18,12 @@ module.exports.createSession = async function (req, res) {
     let user = await User.findOne({ email: req.body.email });
     res.set("Access-Control-Allow-Origin", "*");
     if (!user || user.password != req.body.password) {
-      return res.json(422, {
+      return res.status(422).json({
         message: "Invalid username or password",
       });
     }
     res.set("Access-Control-Allow-Origin", "*");
-    return res.json(200, {
+    return res.status(200).json({
       message: "Sign In Successful, here is your token, please keep it safe",
       data: {
         token: jwt.sign(user.toJSON(), "wolfjobs", { expiresIn: "100000" }),
@@ -30,7 +33,7 @@ module.exports.createSession = async function (req, res) {
     });
   } catch (err) {
     console.log("*******", err);
-    return res.json(500, {
+    return res.status(500).json({
       message: "Internal Server Error",
     });
   }
@@ -46,7 +49,7 @@ module.exports.createHistory = async function (req, res) {
     });
 
     res.set("Access-Control-Allow-Origin", "*");
-    return res.json(200, {
+    return res.status(200).json({
       message: "History Created Successfully",
 
       data: {
@@ -57,7 +60,7 @@ module.exports.createHistory = async function (req, res) {
   } catch (err) {
     console.log(err);
 
-    return res.json(500, {
+    return res.status(500).json({
       message: "Internal Server Error",
     });
   }
@@ -66,15 +69,16 @@ module.exports.createHistory = async function (req, res) {
 module.exports.signUp = async function (req, res) {
   try {
     if (req.body.password != req.body.confirm_password) {
-      return res.json(422, {
+      return res.status(422).json({
         message: "Passwords donot match",
       });
     }
 
+    // try to find an existing user from the database for the entered email
     User.findOne({ email: req.body.email }, function (err, user) {
       if (user) {
         res.set("Access-Control-Allow-Origin", "*");
-        return res.json(200, {
+        return res.status(200).json({
           message: "Sign Up Successful, here is your token, plz keep it safe",
 
           data: {
@@ -89,17 +93,18 @@ module.exports.signUp = async function (req, res) {
         });
       }
 
+      // if a user does not exist then create one
       if (!user) {
-        let user = User.create(req.body, function (err, user) {
+        User.create(req.body, function (err, user) {
           if (err) {
-            return res.json(500, {
+            return res.status(500).json({
               message: "Internal Server Error",
             });
           }
 
           // let userr = User.findOne({ email: req.body.email });
           res.set("Access-Control-Allow-Origin", "*");
-          return res.json(200, {
+          return res.status(200).json({
             message: "Sign Up Successful, here is your token, plz keep it safe",
 
             data: {
@@ -114,7 +119,7 @@ module.exports.signUp = async function (req, res) {
           });
         });
       } else {
-        return res.json(500, {
+        return res.status(500).json({
           message: "Internal Server Error",
         });
       }
@@ -122,7 +127,7 @@ module.exports.signUp = async function (req, res) {
   } catch (err) {
     console.log(err);
 
-    return res.json(500, {
+    return res.status(500).json({
       message: "Internal Server Error",
     });
   }
@@ -132,7 +137,7 @@ module.exports.getProfile = async function (req, res) {
   try {
     let user = await User.findById(req.params.id);
     res.set("Access-Control-Allow-Origin", "*");
-    return res.json(200, {
+    return res.status(200).json({
       message: "The User info is",
 
       data: {
@@ -146,7 +151,7 @@ module.exports.getProfile = async function (req, res) {
   } catch (err) {
     console.log(err);
 
-    return res.json(500, {
+    return res.status(500).json({
       message: "Internal Server Error",
     });
   }
@@ -170,7 +175,7 @@ module.exports.editProfile = async function (req, res) {
     user.skills = check;
     user.save();
     res.set("Access-Control-Allow-Origin", "*");
-    return res.json(200, {
+    return res.status(200).json({
       message: "User is updated Successfully",
 
       data: {
@@ -186,12 +191,12 @@ module.exports.editProfile = async function (req, res) {
   } catch (err) {
     console.log(err);
 
-    return res.json(500, {
+    return res.status(500).json({
       message: "Internal Server Error",
     });
   }
   // } else {
-  //   return res.json(400, {
+  //   return res.status(400).json({
   //     message: "Bad Request",
   //   });
   // }
@@ -202,7 +207,7 @@ module.exports.searchUser = async function (req, res) {
 
     let users = await Job.find({ name: regex });
     res.set("Access-Control-Allow-Origin", "*");
-    return res.json(200, {
+    return res.status(200).json({
       message: "The list of Searched Users",
 
       data: {
@@ -216,7 +221,7 @@ module.exports.searchUser = async function (req, res) {
   } catch (err) {
     console.log(err);
 
-    return res.json(500, {
+    return res.status(500).json({
       message: "Internal Server Error",
     });
   }
@@ -229,7 +234,7 @@ module.exports.getHistory = async function (req, res) {
       date: req.query.date,
     });
     res.set("Access-Control-Allow-Origin", "*");
-    return res.json(200, {
+    return res.status(200).json({
       message: "The User Profile",
 
       data: {
@@ -243,7 +248,7 @@ module.exports.getHistory = async function (req, res) {
   } catch (err) {
     console.log(err);
 
-    return res.json(500, {
+    return res.status(500).json({
       message: "Internal Server Error",
     });
   }
@@ -268,7 +273,7 @@ module.exports.createJob = async function (req, res) {
       question4: req.body.question4,
     });
     res.set("Access-Control-Allow-Origin", "*");
-    return res.json(200, {
+    return res.status(200).json({
       data: {
         job: job,
         //token: jwt.sign(user.toJSON(), env.jwt_secret, { expiresIn: "100000" })
@@ -279,7 +284,7 @@ module.exports.createJob = async function (req, res) {
   } catch (err) {
     console.log(err);
 
-    return res.json(500, {
+    return res.status(500).json({
       message: "NOT CREATED",
     });
   }
@@ -290,7 +295,7 @@ module.exports.index = async function (req, res) {
 
   //Whenever we want to send back JSON data
   res.set("Access-Control-Allow-Origin", "*");
-  return res.json(200, {
+  return res.status(200).json({
     message: "List of jobs",
 
     jobs: jobs,
@@ -302,7 +307,7 @@ module.exports.fetchApplication = async function (req, res) {
 
   //Whenever we want to send back JSON data
   res.set("Access-Control-Allow-Origin", "*");
-  return res.json(200, {
+  return res.status(200).json({
     message: "List of Applications",
 
     application: application,
@@ -321,14 +326,23 @@ module.exports.createApplication = async function (req, res) {
 
     if (existingApplication) {
       res.set("Access-Control-Allow-Origin", "*");
-      return res.json(400, {
+      return res.status(400).json({
         message: "You have already applied for the job",
         error: true,
       });
     }
 
-    let application = await Application.create({
-      // applicantemail: req.body.applicantemail,
+    // Finding the resume using applicantId
+    const userResume = await User.findOne({
+      id: req.body.applicantid,
+    });
+
+    if (!userResume) {
+      return res.status(404).json({ message: "Resume not found in profile" });
+    }
+
+    //passing the resumeId in the body while applying for a job
+    const application = new Application({
       applicantid: req.body.applicantid,
       applicantname: req.body.applicantname,
       applicantemail: req.body.applicantemail,
@@ -342,45 +356,85 @@ module.exports.createApplication = async function (req, res) {
       jobname: req.body.jobname,
       jobid: req.body.jobid,
       managerid: req.body.managerid,
+      resumeId: userResume.resumeId,
     });
     res.set("Access-Control-Allow-Origin", "*");
-    return res.json(200, {
+    await application.save();
+    return res.status(200).json({
       data: {
         application: application,
         //token: jwt.sign(user.toJSON(), env.jwt_secret, { expiresIn: "100000" })
       },
-      message: "Job Created!!",
-      success: true,
     });
   } catch (err) {
     console.log(err);
-
-    return res.json(500, {
-      message: "NOT CREATED",
-    });
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
 
 module.exports.modifyApplication = async function (req, res) {
   try {
     let application = await Application.findById(req.body.applicationId);
-
-    application.status = req.body.status;
+    const newStatus = req.body.status;
+    application.status = newStatus;
 
     //change answer only from screening to grading
-    if (req.body.status === "grading") {
+    if (newStatus === "grading") {
       application.answer1 = req.body.answer1;
       application.answer2 = req.body.answer2;
       application.answer3 = req.body.answer3;
       application.answer4 = req.body.answer4;
     }
 
-    if (req.body.status === "rating") {
+    if (newStatus === "rating") {
       application.rating = req.body.rating;
     }
     application.save();
+
+    // Send email notification after status update
+    const applicant = await User.findById(application.applicantid);
+    const subject = `Update on your application for ${application.jobname}`;
+    let html;
+
+    if (newStatus === "screening") {
+      // Accepted for screening
+      // General email for other statuses
+      html = `<p>Dear ${applicant.name},</p>
+        <p>Your application status for the position of <strong>${application.jobname}</strong> has been accepted after screening. You may now fill out the questionnaire in our website for further evaluation.</p>
+        <p>Best regards,<br>WolfJobs Hiring Team</p>`;
+    } else if (newStatus === "accepted") {
+      // Accepted
+      html = `<p>Dear ${applicant.name},</p>
+        <p>We are pleased to inform you that your application for the position of <strong>${application.jobname}</strong> has been accepted!</p>
+        <p>Please log in to our website for more details.</p>
+        <p>Best regards,<br>WolfJobs Hiring Team</p>`;
+    } else if (newStatus === "rejected") {
+      // Rejected
+      html = `<p>Dear ${applicant.name},</p>
+        <p>We regret to inform you that your application for the position of <strong>${application.jobname}</strong> has been rejected.</p>
+        <p>Thank you for your interest, and we encourage you to apply for other opportunities in the future.</p>
+        <p>Best regards,<br>WolfJobs Hiring Team</p>`;
+    }
+
+    if (
+      newStatus === "screening" ||
+      newStatus === "accepted" ||
+      newStatus === "rejected"
+    ) {
+      // Call the email sending function
+      try {
+        await email.sendEmail(applicant.email, subject, html);
+      } catch (emailError) {
+        console.error("Error sending email:", emailError);
+        return res.status(500).json({
+          message:
+            "Application status updated, but failed to send email notification",
+        });
+      }
+    }
+
     res.set("Access-Control-Allow-Origin", "*");
-    return res.json(200, {
+    return res.status(200).json({
       message: "Application is updated Successfully",
       data: {
         application,
@@ -390,70 +444,20 @@ module.exports.modifyApplication = async function (req, res) {
   } catch (err) {
     console.log(err);
 
-    return res.json(500, {
+    return res.status(500).json({
       message: "Internal Server Error",
     });
   }
 };
 
 module.exports.acceptApplication = async function (req, res) {
-  try {
-    let application = await Application.findById(req.body.applicationId);
-
-    application.status = "1";
-
-    application.save();
-    res.set("Access-Control-Allow-Origin", "*");
-    return res.json(200, {
-      message: "Application is updated Successfully",
-
-      data: {
-        //user.JSON() part gets encrypted
-
-        // token: jwt.sign(user.toJSON(), env.jwt_secret, {
-        //   expiresIn: "100000",
-        // }),
-        application,
-      },
-      success: true,
-    });
-  } catch (err) {
-    console.log(err);
-
-    return res.json(500, {
-      message: "Internal Server Error",
-    });
-  }
+  req.body.status = "accepted";
+  await module.exports.modifyApplication(req, res);
 };
 
 module.exports.rejectApplication = async function (req, res) {
-  try {
-    let application = await Application.findById(req.body.applicationId);
-
-    application.status = "2";
-
-    application.save();
-    res.set("Access-Control-Allow-Origin", "*");
-    return res.json(200, {
-      message: "Application is updated Successfully",
-
-      data: {
-        //user.JSON() part gets encrypted
-
-        // token: jwt.sign(user.toJSON(), env.jwt_secret, {
-        //   expiresIn: "100000",
-        // }),
-        application,
-      },
-      success: true,
-    });
-  } catch (err) {
-    console.log(err);
-
-    return res.json(500, {
-      message: "Internal Server Error",
-    });
-  }
+  req.body.status = "rejected";
+  await module.exports.modifyApplication(req, res);
 };
 
 module.exports.closeJob = async function (req, res) {
@@ -464,7 +468,7 @@ module.exports.closeJob = async function (req, res) {
 
     job.save();
     res.set("Access-Control-Allow-Origin", "*");
-    return res.json(200, {
+    return res.status(200).json({
       message: "Job is updated Successfully",
 
       data: {
@@ -480,7 +484,7 @@ module.exports.closeJob = async function (req, res) {
   } catch (err) {
     console.log(err);
 
-    return res.json(500, {
+    return res.status(500).json({
       message: "Internal Server Error",
     });
   }
@@ -517,14 +521,14 @@ module.exports.generateOtp = async function (req, res) {
     await getTransport().sendMail(mailOptions);
 
     res.set("Access-Control-Allow-Origin", "*");
-    return res.json(200, {
+    return res.status(200).json({
       success: true,
       message: "OTP is generated Successfully",
     });
   } catch (err) {
     console.log(err);
 
-    return res.json(500, {
+    return res.status(500).json({
       message: "Internal Server Error",
     });
   }
@@ -538,7 +542,7 @@ module.exports.verifyOtp = async function (req, res) {
     });
 
     if (!authOtp) {
-      return res.json(422, {
+      return res.status(422).json({
         error: true,
         message: "OTP is not correct",
       });
@@ -552,17 +556,15 @@ module.exports.verifyOtp = async function (req, res) {
     );
 
     res.set("Access-Control-Allow-Origin", "*");
-    return res.json(200, {
+    return res.status(200).json({
       success: true,
       message: "OTP is verified Successfully",
     });
   } catch (err) {
     console.log(err);
 
-    return res.json(500, {
+    return res.status(500).json({
       message: "Internal Server Error",
     });
   }
 };
-
-

@@ -23,7 +23,7 @@ const applicationSchema = new mongoose.Schema({
     default: "",
   },
   applicantskills: {
-    type: String,
+    type: [String],
     default: "",
   },
   phonenumber: {
@@ -85,6 +85,10 @@ const applicationSchema = new mongoose.Schema({
   rating: {
     type: String,
     default: "",
+  },
+  resumeId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Resume",
   },
 });
 
