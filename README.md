@@ -1,8 +1,8 @@
 ![Banner](https://github.com/hsalway1/WolfJobs/blob/master/GIFs/Banner.png)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![npm-build](https://github.com/deepr41/WolfJobs/actions/workflows/build-test-upload.yml/badge.svg)](https://github.com/deepr41/WolfJobs/actions/workflows/build-test-upload.yml)
-[![eslint_check](https://github.com/deepr41/WolfJobs/actions/workflows/check_lint.yml/badge.svg)](https://github.com/deepr41/WolfJobs/actions/workflows/check_lint.yml)
+[![npm-build](https://github.com/hsalway1/WolfJobs/actions/workflows/build-test-upload.yml/badge.svg)](https://github.com/deepr41/WolfJobs/actions/workflows/build-test-upload.yml)
+[![eslint_check](https://github.com/hsalway1/WolfJobs/actions/workflows/check_lint.yml/badge.svg)](https://github.com/deepr41/WolfJobs/actions/workflows/check_lint.yml)
 [![code style: eslint](https://img.shields.io/badge/code%20style-eslint-brightgreen.svg)](https://eslint.org/)
 [![Open Issues](https://img.shields.io/github/issues/hsalway1/wolfjobs)](https://github.com/hsalway1/WolfJobs/issues)
 [![Closed Issues](https://img.shields.io/github/issues-closed/deepr41/wolfjobs)](https://github.com/hsalway1/WolfJobs/issues?q=is%3Aissue+is%3Aclosed)
