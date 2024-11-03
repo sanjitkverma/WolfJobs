@@ -1,4 +1,4 @@
-![Banner](https://github.com/hsalway1/WolfJobs/blob/GIF-Update/GIFs/Banner.png)
+![Banner](https://github.com/hsalway1/WolfJobs/GIFs/Banner.png)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![npm-build](https://github.com/deepr41/WolfJobs/actions/workflows/build-checker.yml/badge.svg)](https://github.com/deepr41/WolfJobs/actions/workflows/build-checker.yml)
@@ -11,13 +11,9 @@
 [![Lines of Code](https://img.shields.io/github/languages/code-size/hsalway1/WolfJobs)](https://github.com/hsalway1/WolfJobs) 
 [![Repo Size](https://img.shields.io/github/repo-size/hsalway1/WolfJobs)](https://github.com/hsalway1/WolfJobs) 
 [![File Count](https://img.shields.io/github/directory-file-count/hsalway1/WolfJobs)](https://github.com/hsalway1/WolfJobs) 
-[![Language Count](https://img.shields.io/github/languages/count/hsalway1/WolfJobs)](https://github.com/hsalway1/WolfJobs) 
-[![Downloads](https://img.shields.io/github/downloads/hsalway1/WolfJobs/total)](https://github.com/hsalway1/WolfJobs/releases) 
+[![Language Count](https://img.shields.io/github/languages/count/hsalway1/WolfJobs)](https://github.com/hsalway1/WolfJobs)
 [![Top Language](https://img.shields.io/github/languages/top/hsalway1/WolfJobs)](https://github.com/hsalway1/WolfJobs)
 [![DOI](https://zenodo.org/badge/429097663.svg)](https://zenodo.org/badge/latestdoi/429097663)
-[![Release](https://img.shields.io/github/v/release/hsalway1/WolfJobs)](https://github.com/hsalway1/WolfJobs) 
-[![Codecov](https://codecov.io/gh/hsalway1/WolfJobs/graph/badge.svg?token=YOUR_CODECOV_TOKEN)](https://codecov.io/gh/hsalway1/WolfJobs)
-
 
 <!-- ![Static Badge](https://img.shields.io/badge/any_text-i_like-blue) -->
 
